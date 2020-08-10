@@ -3,10 +3,6 @@ defmodule LutisWeb.SessionController do
 
   alias Lutis.Accounts
 
-  def new(conn, _) do
-    render(conn, "new.html")
-  end
-
   def create(conn, %{"user" => %{"email" => email, "password" => password}}) do
     case Accounts.authenticate_by_email_password(email, password) do
       {:ok, user} ->
@@ -18,7 +14,7 @@ defmodule LutisWeb.SessionController do
       {:error, :unauthorized} ->
         conn
         |> put_flash(:error, "Bad email/password combination")
-        |> redirect(to: Routes.session_path(conn, :new))
+        |> redirect(to: Routes.login_path(conn, :index))
     end
   end
 

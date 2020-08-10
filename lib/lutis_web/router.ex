@@ -17,8 +17,9 @@ defmodule LutisWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/login", LoginController, :index
     resources "/users", UserController
-    resources "/login", SessionController, only: [:new, :create, :delete],
+    resources "/sessions", SessionController, only: [:create, :delete],
                                               singleton: true
   end
 
