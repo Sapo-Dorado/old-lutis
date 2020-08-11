@@ -14,11 +14,12 @@ defmodule Lutis.Accounts.Credential do
   end
 
   @doc false
-  def changeset(credential, attrs) do
+  def changeset(credential, %{"password" => password} = attrs) do
     credential
-    |> cast(attrs, [:email, :password, :permissions_level])
+    |> cast(attrs, [:email, :password])
     |> validate_required([:email, :password])
     |> unique_constraint(:email)
+    |> change(Argon2.add_hash(password))
   end
 
 end
