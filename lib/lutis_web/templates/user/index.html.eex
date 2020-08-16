@@ -5,7 +5,6 @@
     <tr>
       <th>Username</th>
       <th>Email</th>
-      <th>Password</th>
       <th>Permissions Level</th>
       <th>Color</th>
       <th>Account created</th>
@@ -19,16 +18,15 @@
     <tr>
       <td><%= user.username %></td>
       <td><%= user.credential.email %></td>
-      <td><%= user.credential.password %></td>
       <td><%= user.credential.permissions_level %></td>
       <td><%= user.color %></td>
       <td><%= user.account_created %></td>
       <td><%= user.last_login %></td>
 
       <td>
-        <span><%= link "Show", to: Routes.user_path(@conn, :show, user) %></span>
-        <span><%= link "Edit", to: Routes.user_path(@conn, :edit, user) %></span>
-        <span><%= link "Delete", to: Routes.user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure?"] %></span>
+        <span><%= link "Show", to: Routes.admin_user_path(@conn, :show, user) %></span>
+        <span><%= link "Edit", to: Routes.admin_user_path(@conn, :edit, user) %></span>
+        <span><%= link "Delete", to: Routes.admin_user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure?"] %></span>
       </td>
     </tr>
 <% end %>

@@ -1,6 +1,8 @@
 defmodule LutisWeb.Router do
   use LutisWeb, :router
 
+  alias LutisWeb.Router.Helpers, as: Routes
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -13,14 +15,51 @@ defmodule LutisWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :check_admin do
+    plug :authenticate_user
+  end
+
+  pipeline :check_user do
+    plug :authenticate_user
+  end
+
+  pipeline :check_not_logged_in do
+    plug :ensure_no_session
+  end
+
+
+  #When user doesn't have to be logged in
   scope "/", LutisWeb do
     pipe_through :browser
-
     get "/", PageController, :index
-    get "/login", LoginController, :index
-    resources "/users", UserController
+    resources "/users", UserController, only: [:new, :create]
     resources "/sessions", SessionController, only: [:create, :delete],
                                               singleton: true
+  end
+
+  #When user shouldn't be logged in
+  scope "/", LutisWeb do
+    pipe_through [:browser, :check_not_logged_in]
+    get "/login", LoginController, :index
+  end
+
+  #When user login is required
+  scope "/", LutisWeb do
+    pipe_through [:browser, :check_user]
+    get "/profile", UserController, :show 
+    get "/settings", UserController, :edit
+    patch "/settings", UserController, :update
+    put "/settings", UserController, :update
+    get "/changepassword", UserController, :edit_pw
+    patch "/changepassword", UserController, :update_pw
+    put "/changepassword", UserController, :update_pw
+    delete "/users", UserController, :delete
+  end
+
+
+  scope "/admin", LutisWeb, as: :admin do
+    pipe_through [:browser, :check_admin]
+    resources "/users", UserController, only: [:index, :show, :edit, :update, :delete]
   end
 
 
@@ -29,10 +68,22 @@ defmodule LutisWeb.Router do
       nil ->
         conn
         |> Phoenix.Controller.put_flash(:error, "Login required")
-        |> Phoenix.Controller.redirect(to: "/")
+        |> Phoenix.Controller.redirect(to: Routes.login_path(conn, :index))
         |> halt()
       user_id ->
-        assign(conn, :current_user, Lutis.Accounts.get_user!(user_id))
+        assign(conn, :current_user, user_id)
+    end
+  end
+
+  defp ensure_no_session(conn, _) do
+    case get_session(conn, :user_id) do
+      nil -> 
+        conn
+      user_id ->
+        conn
+        |> Phoenix.Controller.put_flash(:error, "Already Logged in")
+        |> Phoenix.Controller.redirect(to: "/")
+        |> halt()
     end
   end
 

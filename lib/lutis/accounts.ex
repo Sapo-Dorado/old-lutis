@@ -18,7 +18,6 @@ defmodule Lutis.Accounts do
   end
 
   def create_user(attrs \\ %{}) do
-    IO.inspect(attrs)
     user_info = (attrs
                 |> Map.put("account_created", NaiveDateTime.utc_now)
                 |> Map.put("last_login", NaiveDateTime.utc_now))
@@ -27,6 +26,17 @@ defmodule Lutis.Accounts do
     |> User.changeset(user_info)
     |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
     |> Repo.insert()
+  end
+
+  def update_pw(%User{} = user, %{"credential" => %{"old_password" => old_password}} = attrs) do
+    changeset = (user
+    |> User.changeset(attrs))
+    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
+    Repo.update(case authenticate_by_email_password(user.credential.email, old_password) do
+                  {:ok, _user} -> changeset
+                  {:error, :unauthorized} ->
+                    Ecto.Changeset.add_error(changeset, :old_password, "Incorrect password")
+                end)
   end
 
   def update_user(%User{} = user, attrs) do
@@ -42,32 +52,6 @@ defmodule Lutis.Accounts do
 
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
-  end
-
-  def list_credentials do
-    Repo.all(Credential)
-  end
-
-  def get_credential!(id), do: Repo.get!(Credential, id)
-
-  def create_credential(attrs \\ %{}) do
-    %Credential{}
-    |> Credential.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  def update_credential(%Credential{} = credential, attrs) do
-    credential
-    |> Credential.changeset(attrs)
-    |> Repo.update()
-  end
-
-  def delete_credential(%Credential{} = credential) do
-    Repo.delete(credential)
-  end
-
-  def change_credential(%Credential{} = credential, attrs \\ %{}) do
-    Credential.changeset(credential, attrs)
   end
 
   def permissions_level(title) do
@@ -88,7 +72,7 @@ defmodule Lutis.Accounts do
     case query |> Repo.one() |> Repo.preload(:credential) do
       nil -> {:error, :unauthorized}
       user ->
-        if user.credential.password == password do
+        if Argon2.verify_pass(password, user.credential.password_hash) do
           {:ok, user}
         else
           {:error, :unauthorized}

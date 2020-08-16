@@ -6,7 +6,7 @@ defmodule Lutis.Accounts.Credential do
 
   schema "credentials" do
     field :email, :string
-    field :password, :string
+    field :password_hash, :string
     field :permissions_level, :integer
     belongs_to :user, User
 
@@ -16,9 +16,11 @@ defmodule Lutis.Accounts.Credential do
   @doc false
   def changeset(credential, %{"password" => password} = attrs) do
     credential
-    |> cast(attrs, [:email, :password])
-    |> validate_required([:email, :password])
+    |> cast(Map.put(attrs, "password_hash", password), [:email, :password_hash])
     |> unique_constraint(:email)
+    |> validate_required([:email, :password_hash])
+    |> validate_length(:password_hash, min: 6)
+    |> validate_confirmation(:password_hash, message: "passwords do not match")
     |> change(Argon2.add_hash(password))
   end
 
