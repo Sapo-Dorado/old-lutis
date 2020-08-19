@@ -1,33 +1,33 @@
-<h1>Show User</h1>
+<div class="box center">
+  <span><%= link "Back", to: "/" %></span>
+  <h1>Profile</h1>
+  <ul>
+    <li>
+      <strong>Username:</strong>
+      <%= @user.username %>
+    </li>
 
-<ul>
+    <li>
+      <strong>Color:</strong>
+      <%= @user.color %>
+    </li>
 
-  <li>
-    <strong>Username:</strong>
-    <%= @user.username %>
-  </li>
+    <li>
+      <strong>Account created:</strong>
+      <%= @user.account_created %>
+    </li>
 
-  <li>
-    <strong>Color:</strong>
-    <%= @user.color %>
-  </li>
+    <li>
+      <strong>Last login:</strong>
+      <%= @user.last_login %>
+    </li>
 
-  <li>
-    <strong>Account created:</strong>
-    <%= @user.account_created %>
-  </li>
+    <li>
+      <strong>Email:</strong>
+      <%= @user.credential.email %>
+    </li>
+  </ul>
 
-  <li>
-    <strong>Last login:</strong>
-    <%= @user.last_login %>
-  </li>
-
-  <li>
-    <strong>Email:</strong>
-    <%= @user.credential.email %>
-  </li>
-</ul>
-
-<span><%= link "Edit", to: Routes.user_path(@conn, :edit) %></span>
-<span><%= link "Change Password", to: Routes.user_path(@conn, :edit_pw) %></span>
-<span><%= link "Back", to: "/" %></span>
+  <span><%= link "Edit", to: Routes.user_path(@conn, :edit), class: "btn btn-a btn-sm"%></span>
+  <span><%= link "Change Password", to: Routes.user_path(@conn, :edit_pw), class: "btn btn-a btn-sm" %></span>
+</div>

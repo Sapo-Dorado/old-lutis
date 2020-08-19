@@ -10,27 +10,24 @@
   <%= error_tag f, :username %>
 
   <%= label f, :color %>
-  <%= text_input f, :color %>
+  <%= color_input f, :color %>
   <%= error_tag f, :color %>
 
-  <div class="form-group">
-    <%= inputs_for f, :credential, fn cf -> %>
-      <%= label cf, :email %>
-      <%= text_input cf, :email %>
-      <%= error_tag cf, :email %>
+  <%= inputs_for f, :credential, fn cf -> %>
+    <%= label cf, :email %>
+    <%= email_input cf, :email %>
+    <%= error_tag cf, :email %>
 
-      <%= label cf, :password %>
-      <%= text_input cf, :password %>
-      <%= error_tag cf, :password_hash %>
+    <%= label cf, :password %>
+    <%= password_input cf, :password %>
+    <%= error_tag cf, :password_hash %>
 
-      <%= label cf, :confirm_password %>
-      <%= text_input cf, :password_hash_confirmation %>
-      <%= error_tag cf, :password_hash_confirmation %>
-
-    <% end %>
-  </div>
+    <%= label cf, :confirm_password %>
+    <%= password_input cf, :password_hash_confirmation %>
+    <%= error_tag cf, :password_hash_confirmation %>
+  <% end %>
 
   <div>
-    <%= submit "Save" %>
+    <%= submit "Save", class: "btn btn-a round" %>
   </div>
 <% end %>

@@ -9,10 +9,14 @@
     <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
   <body>
-    <main role="main" class="container">
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-      <%= @inner_content %>
-    </main>
+    <nav class="nav" tabindex="-1" onclick="this.focus()">
+      <div class="container">
+        <a href="#">Login</a>
+        <a href="<%=Routes.session_path(@conn, :delete)%>">Logout</a>
+      </div>
+    </nav>
+    <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+    <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+    <%= @inner_content %>
   </body>
 </html>

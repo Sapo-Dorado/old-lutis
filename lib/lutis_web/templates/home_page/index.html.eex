@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css"/>
+<section class="hero is-fullheight is-black is-bold">
+    <div class="hero-body">
+        <div class="container has-text-centered loginhas-image-centered mb-2">
+          <img class="mb-4" src="<%= Routes.static_path(@conn, "/images/navbarlogo.png")%>">
+            <p class="title mb-6">Lutis</p>
+            <div class="section my-6">
+              <a class="my-6 loginbutton logingradient title" href="<%=Routes.user_path(@conn, :new)%>">sign up</a>
+            </div>
+    <div class="columns mt-2">
+      <div class="column">
+        <img class="mb-4" src="<%= Routes.static_path(@conn, "/images/no-ads.png")%>">				  
+        <p class="title has-text-primary">No Ads. Ever.</p>
+      </div>
+      <div class="column py-6">
+        <img class="mb-4" src="<%= Routes.static_path(@conn, "/images/anonymous.png")%>">				  
+        <p class="title has-text-warning">Anonymous For 24 Hours</p>
+        <p class="subtitle has-text-warning-light">or forever</p>
+      </div>
+      <div class="column is-danger">
+        <img class="mb-4"src="<%= Routes.static_path(@conn, "/images/no-censorship.png")%>">
+        <p class="title has-text-danger">Free of censorship</p>
+      </div>
+    </div>
+            
+        </div>
+
+  <%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
+    <div class="form-group">
+      <%= submit "logout" %>
+    </div>
+  <% end %>
+</section>

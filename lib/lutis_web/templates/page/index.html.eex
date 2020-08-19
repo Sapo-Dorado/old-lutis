@@ -1,6 +1,0 @@
-<span><%= link "Login", to: Routes.login_path(@conn, :index) %></span>
-<%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
-  <div class="form-group">
-    <%= submit "logout" %>
-  </div>
-<% end %>

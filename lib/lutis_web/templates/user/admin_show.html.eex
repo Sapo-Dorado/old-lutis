@@ -1,37 +1,34 @@
-<h1>Show User</h1>
+<div class="box center">
+  <h1>Show User</h1>
 
-<ul>
+  <ul>
 
-  <li>
-    <strong>Username:</strong>
-    <%= @user.username %>
-  </li>
+    <li>
+      <strong>Username:</strong>
+      <%= @user.username %>
+    </li>
 
-  <li>
-    <strong>Color:</strong>
-    <%= @user.color %>
-  </li>
+    <li>
+      <strong>Color:</strong>
+      <%= @user.color %>
+    </li>
 
-  <li>
-    <strong>Account created:</strong>
-    <%= @user.account_created %>
-  </li>
+    <li>
+      <strong>Account created:</strong>
+      <%= @user.account_created %>
+    </li>
 
-  <li>
-    <strong>Last login:</strong>
-    <%= @user.last_login %>
-  </li>
+    <li>
+      <strong>Last login:</strong>
+      <%= @user.last_login %>
+    </li>
 
-  <li>
-    <strong>Email:</strong>
-    <%= @user.credential.email %>
-  </li>
+    <li>
+      <strong>Email:</strong>
+      <%= @user.credential.email %>
+    </li>
+  </ul>
 
-  <li>
-    <strong>password:</strong>
-    <%= @user.credential.password %>
-  </li>
-</ul>
-
-<span><%= link "Edit", to: Routes.admin_user_path(@conn, :edit, @user) %></span>
-<span><%= link "Back", to: Routes.admin_user_path(@conn, :index) %></span>
+  <span><%= link "Edit", to: Routes.admin_user_path(@conn, :edit, @user) %></span>
+  <span><%= link "Back", to: Routes.admin_user_path(@conn, :index) %></span>
+</div>

@@ -31,7 +31,7 @@ defmodule LutisWeb.Router do
   #When user doesn't have to be logged in
   scope "/", LutisWeb do
     pipe_through :browser
-    get "/", PageController, :index
+    get "/", HomePageController, :index
     resources "/users", UserController, only: [:new, :create]
     resources "/sessions", SessionController, only: [:create, :delete],
                                               singleton: true

@@ -1,3 +1,10 @@
-<h1>Sign in</h1>
+<div class="container">
+    <a class="btn btn-a btn-sm">view posts</a>
+</div>
+<div class="box center">
+    <center>
+    <h1>Log In</h1>
+    <%= render "login_form.html", Map.put(assigns, :action, Routes.session_path(@conn, :create)) %>
+    </center>
+</div>
 
-<%= render "login_form.html", Map.put(assigns, :action, Routes.session_path(@conn, :create))%>

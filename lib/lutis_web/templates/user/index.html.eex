@@ -1,36 +1,37 @@
-<h1>Listing Users</h1>
+<div class="box center">
+  <h1>Listing Users</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Permissions Level</th>
+        <th>Color</th>
+        <th>Account created</th>
+        <th>Last login</th>
 
-<table>
-  <thead>
-    <tr>
-      <th>Username</th>
-      <th>Email</th>
-      <th>Permissions Level</th>
-      <th>Color</th>
-      <th>Account created</th>
-      <th>Last login</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+  <%= for user <- @users do %>
+      <tr>
+        <td><%= user.username %></td>
+        <td><%= user.credential.email %></td>
+        <td><%= user.credential.permissions_level %></td>
+        <td><%= user.color %></td>
+        <td><%= user.account_created %></td>
+        <td><%= user.last_login %></td>
 
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-<%= for user <- @users do %>
-    <tr>
-      <td><%= user.username %></td>
-      <td><%= user.credential.email %></td>
-      <td><%= user.credential.permissions_level %></td>
-      <td><%= user.color %></td>
-      <td><%= user.account_created %></td>
-      <td><%= user.last_login %></td>
+        <td>
+          <span><%= link "Show", to: Routes.admin_user_path(@conn, :show, user) %></span>
+          <span><%= link "Edit", to: Routes.admin_user_path(@conn, :edit, user) %></span>
+          <span><%= link "Delete", to: Routes.admin_user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+  <% end %>
+    </tbody>
+  </table>
 
-      <td>
-        <span><%= link "Show", to: Routes.admin_user_path(@conn, :show, user) %></span>
-        <span><%= link "Edit", to: Routes.admin_user_path(@conn, :edit, user) %></span>
-        <span><%= link "Delete", to: Routes.admin_user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure?"] %></span>
-      </td>
-    </tr>
-<% end %>
-  </tbody>
-</table>
-
-<span><%= link "New User", to: Routes.user_path(@conn, :new) %></span>
+  <span><%= link "New User", to: Routes.user_path(@conn, :new) %></span>
+</div>

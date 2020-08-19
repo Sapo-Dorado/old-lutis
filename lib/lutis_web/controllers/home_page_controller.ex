@@ -1,4 +1,4 @@
-defmodule LutisWeb.PageController do
+defmodule LutisWeb.HomePageController do
   use LutisWeb, :controller
 
   def index(conn, _params) do
