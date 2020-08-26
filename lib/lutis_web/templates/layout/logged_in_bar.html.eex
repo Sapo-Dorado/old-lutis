@@ -1,0 +1,8 @@
+<header class="sticky">
+    <a class="logo" href="/"><img src="<%= Routes.static_path(@conn, "/images/navbarlogo.png")%>"></a>
+    <a class="btn btn-a round btn-sm" href="#">View Posts</a>
+    <a class="btn btn-b round btn-sm" href="<%=Routes.thread_path(@conn,:index)%>">View Messages</a>
+    <%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
+        <%= submit "Logout", class: "btn btn-c round btn-sm" %>
+    <% end %>
+</header>

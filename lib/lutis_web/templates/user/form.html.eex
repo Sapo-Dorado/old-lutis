@@ -7,6 +7,7 @@
 
   <%= label f, :username %>
   <%= text_input f, :username %>
+  <br>
   <%= error_tag f, :username %>
 
   <%= label f, :color %>
@@ -16,14 +17,17 @@
   <%= inputs_for f, :credential, fn cf -> %>
     <%= label cf, :email %>
     <%= email_input cf, :email %>
+    <br>
     <%= error_tag cf, :email %>
 
     <%= label cf, :password %>
     <%= password_input cf, :password %>
+    <br>
     <%= error_tag cf, :password_hash %>
 
     <%= label cf, :confirm_password %>
     <%= password_input cf, :password_hash_confirmation %>
+    <br>
     <%= error_tag cf, :password_hash_confirmation %>
   <% end %>
 

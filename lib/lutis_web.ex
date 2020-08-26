@@ -24,6 +24,7 @@ defmodule LutisWeb do
       import Plug.Conn
       import LutisWeb.Gettext
       alias LutisWeb.Router.Helpers, as: Routes
+      import Phoenix.LiveView.Controller
     end
   end
 
@@ -33,11 +34,30 @@ defmodule LutisWeb do
         root: "lib/lutis_web/templates",
         namespace: LutisWeb
 
+      import Phoenix.LiveView.Helpers
       # Import convenience functions from controllers
       import Phoenix.Controller,
         only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1]
 
       # Include shared imports and aliases for views
+      unquote(view_helpers())
+      IO.inspect("does this load?")
+    end
+  end
+
+  def live_view do
+    quote do
+      use Phoenix.LiveView,
+        layout: {LutisWeb.LayoutView, "live.html"}
+
+      unquote(view_helpers())
+    end
+  end
+
+  def live_component do
+    quote do
+      use Phoenix.LiveComponent
+
       unquote(view_helpers())
     end
   end
@@ -48,6 +68,7 @@ defmodule LutisWeb do
 
       import Plug.Conn
       import Phoenix.Controller
+      import Phoenix.LiveView.Router
     end
   end
 

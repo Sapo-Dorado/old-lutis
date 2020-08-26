@@ -1,0 +1,32 @@
+<div class="box center">
+  <h1>Messages</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>User1</th>
+        <th>User2</th>
+
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for thread <- @threads do %>
+          <% user1 = Lutis.Accounts.get_username!(thread.user1) %>
+          <% user2 = Lutis.Accounts.get_username!(thread.user2) %>
+          <% recipient = if thread.user2 == @current_user, do: user1, else: user2 %>
+          <tr>
+            <td><%= user1 %></td>
+            <td><%= user2 %></td>
+
+            <td>
+              <span><%= link "Show", to: Routes.live_path(@conn, LutisWeb.MessagingLive, recipient) %></span>
+              <span><%= link "Delete", to: Routes.thread_path(@conn, :delete, recipient), method: :delete, data: [confirm: "Are you sure?"] %></span>
+            </td>
+          </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <span><%= link "New Thread", to: Routes.thread_path(@conn, :new), class: "btn btn-a round" %></span>
+</div>

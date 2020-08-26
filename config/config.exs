@@ -16,7 +16,7 @@ config :lutis, LutisWeb.Endpoint,
   secret_key_base: "RErBhypdWc7asOmCduHhxBbjmsxW3L32aHC/jtVSi/z3kDilRcF4DEiQWR+sHzMy",
   render_errors: [view: LutisWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Lutis.PubSub,
-  live_view: [signing_salt: "axOG0IYJ"]
+  live_view: [signing_salt: "qHeISyXlVsskoej0dM0UDaYCT0nlwtgj"]
 
 # Configures Elixir's Logger
 config :logger, :console,

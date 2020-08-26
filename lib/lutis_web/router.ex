@@ -9,6 +9,7 @@ defmodule LutisWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :put_root_layout, {LutisWeb.LayoutView, :root}
   end
 
   pipeline :api do
@@ -32,7 +33,6 @@ defmodule LutisWeb.Router do
   scope "/", LutisWeb do
     pipe_through :browser
     get "/", HomePageController, :index
-    resources "/users", UserController, only: [:new, :create]
     resources "/sessions", SessionController, only: [:create, :delete],
                                               singleton: true
   end
@@ -41,19 +41,27 @@ defmodule LutisWeb.Router do
   scope "/", LutisWeb do
     pipe_through [:browser, :check_not_logged_in]
     get "/login", LoginController, :index
+    resources "/users", UserController, only: [:new, :create]
   end
 
   #When user login is required
   scope "/", LutisWeb do
     pipe_through [:browser, :check_user]
     get "/profile", UserController, :show 
+
     get "/settings", UserController, :edit
     patch "/settings", UserController, :update
     put "/settings", UserController, :update
+
     get "/changepassword", UserController, :edit_pw
     patch "/changepassword", UserController, :update_pw
     put "/changepassword", UserController, :update_pw
-    delete "/users", UserController, :delete
+
+    resources "/messages", ThreadController, only: [:index, :new, :create]
+    live "/messages/:recipient", MessagingLive
+
+    delete "/messages/:recipient", ThreadController, :delete
+    post "/messages/:recipient", ThreadController, :send
   end
 
 
@@ -79,7 +87,7 @@ defmodule LutisWeb.Router do
     case get_session(conn, :user_id) do
       nil -> 
         conn
-      user_id ->
+      _user_id ->
         conn
         |> Phoenix.Controller.put_flash(:error, "Already Logged in")
         |> Phoenix.Controller.redirect(to: "/")

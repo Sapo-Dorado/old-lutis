@@ -6,6 +6,7 @@
   <% end %>
   <%= label f, :username %>
   <%= text_input f, :username %>
+  <br>
   <%= error_tag f, :username %>
 
   <%= label f, :color %>

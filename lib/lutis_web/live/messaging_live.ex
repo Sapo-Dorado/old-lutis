@@ -1,0 +1,44 @@
+defmodule LutisWeb.MessagingLive do
+  use LutisWeb, :live_view
+
+  alias Lutis.Messaging
+  alias Lutis.Accounts
+
+  def mount(%{"recipient" => recipient}, session, socket) do
+    socket =
+      case session["user_id"] do
+        nil -> redirect(socket, to: "/login")
+        _ -> socket
+      end
+    thread = Messaging.get_thread(session["user_id"], Accounts.get_user_id(recipient))
+    LutisWeb.Endpoint.subscribe("message_#{thread.id}")
+
+    {:ok, socket
+          |> assign(:messages, Messaging.list_messages(thread))
+          |> assign(:recipient, recipient)
+          |> assign(:user_id, session["user_id"])
+    }
+  end
+
+  def handle_event("send_message", %{"message" => %{"contents" => contents}}, socket) do
+    recipient_id = Accounts.get_user_id(socket.assigns.recipient)
+    thread = Messaging.get_thread(socket.assigns.user_id, recipient_id)
+    message_params = %{
+      "author" => socket.assigns.user_id,
+      "contents" => contents,
+      "thread_id" => thread.id
+    }
+    case Messaging.create_message(message_params) do
+      {:ok, new_message} ->
+        LutisWeb.Endpoint.broadcast_from!(self(),"message_#{thread.id}", "new_message", new_message)
+        updated_messages = socket.assigns.messages ++ [new_message]
+        {:noreply, socket |> assign(:messages, updated_messages)}
+      {:error, _} ->
+    end
+  end
+
+  def handle_info(%{event: "new_message", payload: new_message}, socket) do
+    updated_messages = socket.assigns.messages ++ [new_message]
+    {:noreply, socket |> assign(:messages, updated_messages)}
+  end
+end

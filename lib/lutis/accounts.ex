@@ -1,6 +1,4 @@
-defmodule Lutis.Accounts do
-
-  import Ecto.Query, warn: false
+defmodule Lutis.Accounts do import Ecto.Query, warn: false
   alias Lutis.Repo
 
   alias Lutis.Accounts.{User, Credential}
@@ -15,6 +13,19 @@ defmodule Lutis.Accounts do
     User
     |> Repo.get!(id)
     |> Repo.preload(:credential)
+  end
+
+  def get_user_id(name) do
+    case(User
+        |> Ecto.Query.where(username: ^name)
+        |> Repo.one) do
+      nil -> nil
+      user -> user.id
+    end
+  end
+
+  def get_username!(id) do
+    get_user!(id).username
   end
 
   def create_user(attrs \\ %{}) do

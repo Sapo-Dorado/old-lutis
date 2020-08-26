@@ -24,4 +24,11 @@ defmodule Lutis.Accounts.Credential do
     |> change(Argon2.add_hash(password))
   end
 
+  def changeset(credential, attrs) do
+    credential
+    |> cast(attrs, [:email])
+    |> unique_constraint(:email)
+    |> validate_required([:email, :password_hash])
+  end
+
 end

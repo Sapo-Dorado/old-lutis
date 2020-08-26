@@ -1,0 +1,7 @@
+<div class="box center">
+  <span><%= link "Back", to: Routes.thread_path(@conn, :index) %></span>
+  <h1>New Message</h1>
+
+  <%= render "form.html", Map.put(assigns, :action, Routes.thread_path(@conn, :create)) %>
+
+</div>
