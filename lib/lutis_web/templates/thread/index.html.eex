@@ -20,7 +20,7 @@
             <td><%= user2 %></td>
 
             <td>
-              <span><%= link "Show", to: Routes.live_path(@conn, LutisWeb.MessagingLive, recipient) %></span>
+              <span><%= link "Show", to: "#{Routes.live_path(@conn, LutisWeb.MessagingLive, recipient)}#view"%></span>
               <span><%= link "Delete", to: Routes.thread_path(@conn, :delete, recipient), method: :delete, data: [confirm: "Are you sure?"] %></span>
             </td>
           </tr>

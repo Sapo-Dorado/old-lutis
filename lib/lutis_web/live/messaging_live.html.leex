@@ -1,17 +1,18 @@
-<div class="box">
-  <span><%= link "Back", to: Routes.thread_path(@socket, :index) %></span>
+<div class="box", id="messaging">
   <h1><%=@recipient%></h1>
-    <table>
-      <%= for message <- @messages do %>
-        <tr>
-          <td><%= Lutis.Accounts.get_username!(message.author)%></td>
-          <td><%= message.contents%></td>
-          <td><%= message.time_sent%></td>
-        </tr>
-      <% end %>
-    </table>
-    <%= f = form_for :message, "#", [phx_submit: "send_message"]%>
-      <%= text_input f, :contents %>
-      <%= submit "Send", class: "btn btn-a btn-sm"%>
-    </form>
+  <table phx-hook="InfiniteScroll">
+    <%= for message <- @messages do %>
+      <tr>
+        <td><%= Lutis.Accounts.get_username!(message.author)%></td>
+        <td><%= message.contents%></td>
+        <td><%= message.time_sent%></td>
+      </tr>
+    <% end %>
+  </table>
+  <%= f = form_for :message, "#", [phx_submit: "send_message"]%>
+    <%= text_input f, :contents %>
+    <%= submit "Send", class: "btn btn-a btn-sm", id: "send"%>
+  </form>
+  <span><%= link "Back", to: Routes.thread_path(@socket, :index)%></span>
+  <a name="view" id="view"></a>
 </div>

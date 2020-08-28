@@ -50,9 +50,27 @@ defmodule Lutis.Messaging do
   end
 
   #Message Functions
-  def list_messages(thread) do
-    Repo.preload(thread, :messages).messages
+  def message_stream(thread, nil = id) do
+    query = from m in Message,
+              where: m.thread_id == ^thread.id,
+              order_by: [desc: m.id]
+    Repo.stream(query)
   end
+
+  def message_stream(thread, id) do
+    query = from m in Message,
+              where: m.thread_id == ^thread.id,
+              where: m.id < ^id,
+              order_by: [desc: m.id]
+    Repo.stream(query)
+  end
+
+  def extract_messages(thread, num, info) do
+    Repo.transaction(fn() ->
+      Enum.reverse(message_stream(thread, info) |> Stream.take(num))
+    end)
+  end
+  
 
   def get_message!(id), do: Repo.get!(Message, id)
 

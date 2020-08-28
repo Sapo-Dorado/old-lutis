@@ -4,20 +4,28 @@ defmodule LutisWeb.MessagingLive do
   alias Lutis.Messaging
   alias Lutis.Accounts
 
+  @load_amount 50
+
   def mount(%{"recipient" => recipient}, session, socket) do
     socket =
       case session["user_id"] do
-        nil -> redirect(socket, to: "/login")
+        nil -> redirect(socket, to: Routes.login_path(socket, :index))
         _ -> socket
       end
     thread = Messaging.get_thread(session["user_id"], Accounts.get_user_id(recipient))
     LutisWeb.Endpoint.subscribe("message_#{thread.id}")
-
-    {:ok, socket
-          |> assign(:messages, Messaging.list_messages(thread))
-          |> assign(:recipient, recipient)
-          |> assign(:user_id, session["user_id"])
-    }
+    case Messaging.extract_messages(thread, @load_amount, nil) do
+      {:ok, message_list} -> 
+        new_socket = (socket
+                     |> assign(:messages, message_list)
+                     |> assign(:recipient, recipient)
+                     |> assign(:user_id, session["user_id"]))
+        case message_list do
+          []-> {:ok, new_socket |> assign(:last_id, nil)}
+          _ -> {:ok, new_socket |> assign(:last_id, hd(message_list).id)}
+        end
+      {:error, _} -> redirect(socket, to: Routes.thread_path(socket, :index))
+    end
   end
 
   def handle_event("send_message", %{"message" => %{"contents" => contents}}, socket) do
@@ -34,6 +42,27 @@ defmodule LutisWeb.MessagingLive do
         updated_messages = socket.assigns.messages ++ [new_message]
         {:noreply, socket |> assign(:messages, updated_messages)}
       {:error, _} ->
+        {:noreply, socket}
+    end
+  end
+
+  def handle_event("load_messages", _attrs, socket) do
+    recipient_id = Accounts.get_user_id(socket.assigns.recipient)
+    thread = Messaging.get_thread(socket.assigns.user_id, recipient_id)
+    case socket.assigns.last_id do
+      nil -> {:noreply, socket}
+      _ ->
+        case Messaging.extract_messages(thread, @load_amount, socket.assigns.last_id) do
+          {:ok, new_messages} -> 
+            case new_messages do
+              [] -> {:noreply, socket |> assign(:last_id, nil)}
+              _ ->
+                {:noreply, socket
+                            |> assign(:messages, new_messages ++ socket.assigns.messages)
+                            |> assign(:last_id, hd(new_messages).id)}
+            end
+          {:error, _} -> redirect(socket, to: Routes.thread_path(socket, :index))
+        end
     end
   end
 
