@@ -29,9 +29,9 @@ defmodule Lutis.Accounts do import Ecto.Query, warn: false
   end
 
   def create_user(attrs \\ %{}) do
-    user_info = (attrs
+    user_info = attrs
                 |> Map.put("account_created", NaiveDateTime.utc_now)
-                |> Map.put("last_login", NaiveDateTime.utc_now))
+                |> Map.put("last_login", NaiveDateTime.utc_now)
 
     %User{}
     |> User.changeset(user_info)
@@ -40,9 +40,9 @@ defmodule Lutis.Accounts do import Ecto.Query, warn: false
   end
 
   def update_pw(%User{} = user, %{"credential" => %{"old_password" => old_password}} = attrs) do
-    changeset = (user
-    |> User.changeset(attrs))
-    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
+    changeset = user
+                |> User.changeset(attrs)
+                |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
     Repo.update(case authenticate_by_email_password(user.credential.email, old_password) do
                   {:ok, _user} -> changeset
                   {:error, :unauthorized} ->

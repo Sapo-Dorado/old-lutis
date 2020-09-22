@@ -1,0 +1,28 @@
+<div class="box center">
+
+  <h1><%= @post.title%></h1>
+
+  <% author = Lutis.Accounts.get_username!(@post.author) %>
+  <strong>by: <%= author %></strong>
+  <br>
+  <br>
+  <%= markdown(@post.contents)%>
+  <% IO.inspect(markdown(@post.contents)) %>
+  <br>
+  <p>Topic: <%= @post.topic%></p>
+  <p> Views: <%= @post.views %> Upvotes: <%= Lutis.Posts.count_upvotes(@post)%></p>
+
+  <%= form_for @conn, Routes.post_path(@conn, :upvote, author, @post.url_id), fn _ -> %>
+    <%= if Lutis.Posts.has_upvoted?(@current_user, @post) do %>
+      <%= submit "Undo Upvote", class: "btn btn-a btn-sm" %>
+    <% else %>
+      <%= submit "Upvote", class: "btn btn-a btn-sm" %>
+    <% end %>
+  <% end %>
+
+  <span><%= link "Back", to: Routes.post_path(@conn, :index) %></span>
+  <%= if @current_user == @post.author do%>
+    <span><%= link "Edit", to: Routes.post_path(@conn, :edit, author, @post.url_id) %></span>
+    <span><%= link "Delete", to: Routes.post_path(@conn, :delete, author, @post.url_id), method: :delete, data: [confirm: "Are you sure?"] %></span>
+  <% end %>
+</div>

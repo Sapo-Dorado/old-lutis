@@ -6,7 +6,7 @@ defmodule Lutis.Messaging do
 
   #Thread Functions
   def list_threads(user_id) do
-    Ecto.Query.from(t in Thread, where: t.user1 == ^user_id or t.user2 == ^user_id)
+    Ecto.Query.from(t in Thread, where: t.user1 == ^user_id or t.user2 == ^user_id, order_by: [desc: t.lastmessage])
     |> Repo.all
   end
 
@@ -30,8 +30,8 @@ defmodule Lutis.Messaging do
                             |> Map.put("user2", attrs["recipient_id"])
                           true ->
                             attrs
-                            |> Map.put("user1", attrs["user_id"])
-                            |> Map.put("user2", attrs["recipient_id"])
+                            |> Map.put("user2", attrs["user_id"])
+                            |> Map.put("user1", attrs["recipient_id"])
                         end)
         %Thread{}
         |> Thread.changeset(thread_attrs)
@@ -50,41 +50,67 @@ defmodule Lutis.Messaging do
   end
 
   #Message Functions
-  def message_stream(thread, nil = id) do
-    query = from m in Message,
-              where: m.thread_id == ^thread.id,
-              order_by: [desc: m.id]
-    Repo.stream(query)
+  def message_stream(thread, nil = _id) do
+    Ecto.Query.from(m in Message, where: m.thread_id == ^thread.id, order_by: [desc: m.id])
+    |> Repo.stream()
   end
 
   def message_stream(thread, id) do
-    query = from m in Message,
-              where: m.thread_id == ^thread.id,
-              where: m.id < ^id,
-              order_by: [desc: m.id]
-    Repo.stream(query)
+    Ecto.Query.from(m in Message, where: m.thread_id == ^thread.id, where: m.id < ^id, order_by: [desc: m.id])
+    |> Repo.stream()
   end
 
   def extract_messages(thread, num, info) do
-    Repo.transaction(fn() ->
-      Enum.reverse(message_stream(thread, info) |> Stream.take(num))
-    end)
+    case Repo.transaction(fn() -> Enum.reverse(message_stream(thread, info) |> Stream.take(num)) end) do
+      {:ok, message_list} ->
+        case message_list do
+          [] -> {:ok, message_list, nil}
+          _  ->
+            id = hd(message_list).id
+            query = from m in Message,
+                      where: m.thread_id == ^thread.id,
+                      where: m.id < ^id,
+                      order_by: [desc: m.id]
+            case Repo.one(first(query)) do
+              nil -> {:ok, message_list, nil}
+              _ -> {:ok, message_list, id}
+            end
+        end
+      error -> error
+    end
   end
   
 
   def get_message!(id), do: Repo.get!(Message, id)
 
-  def create_message(attrs \\ %{}) do
+  def create_message(thread, attrs) do
+    currentTime = NaiveDateTime.utc_now
+    thread
+    |> Thread.changeset(%{lastmessage: currentTime})
+    |> Repo.update()
     %Message{}
-    |> Message.changeset(Map.put(attrs, "time_sent", NaiveDateTime.utc_now))
+    |> Message.changeset(Map.put(attrs, "time_sent", currentTime))
     |> Repo.insert()
+  end
+
+  def mark_as_read(thread, user) do
+    currentTime = NaiveDateTime.utc_now
+    if(thread.user1 == user) do 
+      thread |> Thread.changeset(%{user1read: currentTime}) |> Repo.update()
+    end
+    if(thread.user2 == user) do
+      thread |> Thread.changeset(%{user2read: currentTime}) |> Repo.update()
+    end
+  end
+
+  def has_unread_message?(thread, user) do
+    cond do
+      thread.user1 == user -> thread.user1read < thread.lastmessage
+      thread.user2 == user -> thread.user2read < thread.lastmessage
+    end
   end
 
   def delete_message(%Message{} = message) do
     Repo.delete(message)
-  end
-
-  def change_message(%Message{} = message, attrs \\ %{}) do
-    Message.changeset(message, attrs)
   end
 end

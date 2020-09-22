@@ -19,22 +19,22 @@ import LiveSocket from "phoenix_live_view"
 
 let Hooks = {}
 
-Hooks.InfiniteScroll = {
-    scrollAt(){
-        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-        let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-        let clientHeight = document.documentElement.clientHeight
-
-        return scrollTop / (scrollHeight-clientHeight) * 100
-    },
-    mounted(){
-        window.addEventListener("scroll", e => {
-            if(this.scrollAt() < 10) {
-                this.pushEvent("load_messages", {})
-            } 
-        })
-    }
-}
+//Hooks.InfiniteScroll = {
+//    scrollAt(){
+//        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+//        let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+//        let clientHeight = document.documentElement.clientHeight
+//
+//        return scrollTop / (scrollHeight-clientHeight) * 100
+//    },
+//    mounted(){
+//        window.addEventListener("scroll", e => {
+//            if(this.scrollAt() < 10) {
+//                this.pushEvent("load_messages", {})
+//            } 
+//        })
+//    }
+//}
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {hooks: Hooks, params: {_csrf_token: csrfToken}})
@@ -50,6 +50,8 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
-if (document.querySelector("#messaging")){
-    require("./messaging").Messaging.run()
+if (document.querySelector("#body-editor")){
+    require("./editor").Editor.run()
 }
+
+

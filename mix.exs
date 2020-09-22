@@ -47,7 +47,9 @@ defmodule Lutis.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:argon2_elixir, "~> 2.0"},
       {:phoenix_live_view, "~> 0.14.2"},
-      {:floki, ">= 0.0.0", only: :test}
+      {:floki, ">= 0.0.0", only: :test},
+      {:earmark, "~> 1.4.10"},
+      {:phoenix_html_sanitizer, "~> 1.0.0"}
     ]
   end
 

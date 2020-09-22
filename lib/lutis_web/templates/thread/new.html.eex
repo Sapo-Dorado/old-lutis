@@ -1,5 +1,5 @@
 <div class="box center">
-  <span><%= link "Back", to: Routes.thread_path(@conn, :index) %></span>
+  <span><%= link "Back", to: Routes.live_path(@conn, LutisWeb.MessagingIndexLive) %></span>
   <h1>New Message</h1>
 
   <%= render "form.html", Map.put(assigns, :action, Routes.thread_path(@conn, :create)) %>

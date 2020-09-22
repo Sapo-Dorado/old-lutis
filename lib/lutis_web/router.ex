@@ -57,13 +57,22 @@ defmodule LutisWeb.Router do
     patch "/changepassword", UserController, :update_pw
     put "/changepassword", UserController, :update_pw
 
-    resources "/messages", ThreadController, only: [:index, :new, :create]
+    resources "/messages", ThreadController, only: [:new, :create]
+    live "/messages", MessagingIndexLive
     live "/messages/:recipient", MessagingLive
 
     delete "/messages/:recipient", ThreadController, :delete
     post "/messages/:recipient", ThreadController, :send
-  end
 
+    resources "/posts", PostController, only: [:index, :new, :create]
+    get "/posts/:user/:id", PostController, :show
+    get "/posts/:user/:id/edit", PostController, :edit
+    patch "/posts/:user/:id", PostController, :update
+    put "/posts/:user/:id", PostController, :update
+    delete "/posts/:user/:id", PostController, :delete
+
+    post "/posts/:user/:id/upvote", PostController, :upvote
+  end
 
   scope "/admin", LutisWeb, as: :admin do
     pipe_through [:browser, :check_admin]

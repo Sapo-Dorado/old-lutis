@@ -2,13 +2,8 @@ defmodule LutisWeb.ThreadController do
   use LutisWeb, :controller
 
   alias Lutis.Messaging
-  alias Lutis.Messaging.{Thread, Message}
+  alias Lutis.Messaging.Thread
   alias Lutis.Accounts
-
-  def index(conn, _params) do
-    threads = Messaging.list_threads(conn.assigns.current_user)
-    render(conn, "index.html", threads: threads)
-  end
 
   def new(conn, _params) do
     changeset = Messaging.change_thread(%Thread{})
@@ -22,8 +17,7 @@ defmodule LutisWeb.ThreadController do
     case Messaging.create_thread(thread_params) do
       {:ok, _thread} ->
         conn
-        |> put_flash(:info, "Thread created successfully.")
-        |> redirect(to: Routes.live_path(conn, LutisWeb.MessagingLive, thread_params["recipient"]))
+        |> redirect(to: "#{Routes.live_path(conn, LutisWeb.MessagingLive, thread_params["recipient"])}#view")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)

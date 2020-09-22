@@ -41,7 +41,6 @@ defmodule LutisWeb do
 
       # Include shared imports and aliases for views
       unquote(view_helpers())
-      IO.inspect("does this load?")
     end
   end
 
