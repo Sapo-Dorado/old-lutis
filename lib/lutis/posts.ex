@@ -76,4 +76,8 @@ defmodule Lutis.Posts do
       |> Repo.delete()
     end
   end
+
+  def check_author(conn, post) do
+    conn.assigns.current_user == post.author
+  end
 end

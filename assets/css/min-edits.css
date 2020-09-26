@@ -45,23 +45,18 @@ body {background-color:#24252a;}
 .btn{background:#999;border-radius:6px;color:#FFF;border:0;cursor:pointer;display:inline-block;margin:5px;padding:12px 30px 14px;text-decoration:none}
 .btn:hover{background:#888}
 .btn:active,.btn:focus{background:#777}
-.btn-a{color:#ffaacc;background:#FFF}
-.btn-a:hover{color:#FFF;background:#ffaacc}
-.btn-a:active,.btn-a:focus{color:transparent;background:#ffaacc}
-.btn-b{color:#FFF;background:#ff997f}
-.btn-b:hover{color:#ff997f;background:#FFF}
-.btn-b:active,.btn-b:focus{color:transparent;}
+.btn-a{color:#FFF;background:#ff997f}
+.btn-a:hover{color:#ff997f;background:#FFF}
+.btn-a:active,.btn-b:focus{color:transparent;}
+.btn-b{color:#ffaacc;background:#FFF}
+.btn-b:hover{color:#FFF;background:#ffaacc}
+.btn-b:active,.btn-a:focus{color:transparent;background:#ffaacc}
 .btn-c{background:#ff6b74}
 .btn-c:hover{color:#ff6b74;background:#FFF}
 .btn-c:active,.btn-c:focus{color:transparent;}
 .btn-sm{border-radius:4px;padding:10px 14px 11px}
 .btn-sign-up{border:5px #ffaacc;border-radius:2em;padding:.5em;font-size:6em; background:#333}
 .round{border-radius:500px;}
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 
 header {
   display: flex;
@@ -78,5 +73,47 @@ header {
 .sticky {
   position: fixed;
   top: 0;
-  width: 100%
+  width: 100%;
+}
+* {
+  box-sizing:border-box;
+}
+
+.info-button{
+    border-radius:6px;
+    color:#FFF;
+    border:0;
+    cursor:pointer;
+    display:inline-block;
+    margin:5px;
+    text-decoration:none;
+    font-size:24px;
+    text-align:center;
+}
+
+.post-button{
+    background:#646464;
+    height:90px;
+    width: 100%;
+}
+
+.thread-button{
+    background:#808080;
+    height:50px;
+    width:70%;
+}
+
+.edit-post-button{
+    color:#000;
+}
+
+.delete-button{
+    color:#F00;
+}
+
+.post-info-text{
+    font-size:24px;
+}
+.unread-icon{
+    width:10%;
 }

@@ -1,35 +1,8 @@
 <div class="box center">
   <h1>Messages</h1>
-
-  <table>
-    <thead>
-      <tr>
-        <th></th>
-        <th>Recipient</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <%= for thread <- @threads do %>
-          <% user1 = Lutis.Accounts.get_username!(thread.user1) %>
-          <% user2 = Lutis.Accounts.get_username!(thread.user2) %>
-          <% recipient = if thread.user2 == @user_id, do: user1, else: user2 %>
-          <tr>
-            <%=live_component @socket, LutisWeb.UnreadMessageComponent,
-                                       id: "#{thread.id}-#{@user_id}",
-                                       thread: thread,
-                                       user_id: @user_id,
-                                       unread: Lutis.Messaging.has_unread_message?(thread, @user_id)%>
-            <td><%= recipient %></td>
-
-            <td>
-              <span><%= link "Show", to: "#{Routes.live_path(@socket, LutisWeb.MessagingLive, recipient)}#view"%></span>
-              <span><%= link "Delete", to: Routes.thread_path(@socket, :delete, recipient), method: :delete, data: [confirm: "Are you sure?"] %></span>
-            </td>
-          </tr>
-      <% end %>
-    </tbody>
-  </table>
-
+  <%= for thread <- @threads do %>
+    <%= show_thread(assigns, thread) %>
+    <br>
+  <% end %>
   <span><%= link "New Thread", to: Routes.thread_path(@socket, :new), class: "btn btn-a round" %></span>
 </div>

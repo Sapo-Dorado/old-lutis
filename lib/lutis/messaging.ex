@@ -37,7 +37,7 @@ defmodule Lutis.Messaging do
         |> Thread.changeset(thread_attrs)
         |> Repo.insert()
       thread ->
-        {:ok, thread}
+        {:exists, thread}
     end
   end
 

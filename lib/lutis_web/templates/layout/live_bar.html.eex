@@ -1,8 +1,0 @@
-<header class="sticky">
-    <a class="logo" href="/"><img src="<%= Routes.static_path(@socket, "/images/navbarlogo.png")%>"></a>
-    <a class="btn btn-a round btn-sm" href="<%=Routes.post_path(@socket,:index)%>">View Posts</a>
-    <a class="btn btn-b round btn-sm" href="<%=Routes.live_path(@socket,LutisWeb.MessagingIndexLive)%>">View Messages</a>
-    <%= _ = form_for :logout, Routes.session_path(@socket, :delete), [method: :delete, as: :user]%>
-        <%= submit "Logout", class: "btn btn-c round btn-sm" %>
-    </form>
-</header>

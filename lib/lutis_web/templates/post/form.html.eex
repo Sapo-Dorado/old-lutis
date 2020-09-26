@@ -24,3 +24,8 @@
     <%= submit "Save", class: "btn btn-a btm-sm"%>
   </div>
 <% end %>
+<script>
+  var simplemde = new SimpleMDE({
+      hideIcons: ["preview", "side-by-side"]
+  });
+</script>

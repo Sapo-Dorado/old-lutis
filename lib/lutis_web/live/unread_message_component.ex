@@ -10,17 +10,12 @@ defmodule LutisWeb.UnreadMessageComponent do
           |> assign(:unread, unread)}
   end
 
-  def handle_info(%{event: "new_message"}, socket) do
-    LutisWeb.Endpoint.broadcast_from!(self(), "thread_#{socket.assigns.user_id}", "new_message", nil)
-    {:ok, socket}
-  end
-
   def render(assigns) do
     ~L"""
     <%= if @unread do %>
-      <td><p>dot<p></td>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
     <% else %>
-      <td><p><p></td>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
     <% end %>
     """
   end

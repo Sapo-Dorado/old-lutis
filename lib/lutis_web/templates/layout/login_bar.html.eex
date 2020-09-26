@@ -1,6 +1,0 @@
-<header class="sticky">
-    <a class="logo" href="/"><img src="<%=Routes.static_path(@conn, "/images/navbarlogo.png")%>"></a>
-    <a style="margin:5px;"class="btn btn-a round btn-sm" href="#">View Posts</a>
-    <a style="margin:5px;"class="btn btn-b round btn-sm" href="<%=Routes.user_path(@conn, :new)%>">Sign Up</a>
-    <a style="margin:5px;"class="btn btn-c round btn-sm" href="<%=Routes.login_path(@conn,:index)%>">Log In</a>
-</header>

@@ -50,8 +50,3 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
-if (document.querySelector("#body-editor")){
-    require("./editor").Editor.run()
-}
-
-

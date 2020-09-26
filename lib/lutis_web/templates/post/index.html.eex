@@ -1,37 +1,10 @@
+<script src="https://unpkg.com/feather-icons"></script>
 <div class="box center">
   <h1>Listing Posts</h1>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Author</th>
-        <th>Topic</th>
-        <th>Title</th>
-        <th>Contents</th>
-        <th>Views</th>
-        <th>Upvotes</th>
-
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
+  <span><%= link "New Post", to: Routes.post_path(@conn, :new), class: "btn btn-a round"%></span>
   <%= for post <- @posts do %>
-    <% author = Lutis.Accounts.get_username!(post.author)%>
-      <tr>
-        <td><%= author %></td>
-        <td><%= post.topic %></td>
-        <td><%= post.title %></td>
-        <td><%= post.contents %></td>
-        <td><%= post.views %></td>
-        <td><%= Lutis.Posts.count_upvotes(post) %></td>
-
-        <td>
-          <span><%= link "Show", to: Routes.post_path(@conn, :show, author, post.url_id) %></span>
-        </td>
-      </tr>
+    <%= showPost(post, assigns) %>
+    <br>
   <% end %>
-    </tbody>
-  </table>
-
-  <span><%= link "New Post", to: Routes.post_path(@conn, :new) %></span>
+  <script>feather.replace()</script>
 </div>

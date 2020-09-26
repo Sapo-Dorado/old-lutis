@@ -68,4 +68,10 @@ defmodule LutisWeb.MessagingLive do
     updated_messages = socket.assigns.messages ++ [new_message]
     {:noreply, socket |> assign(:messages, updated_messages)}
   end
+
+  def handle_info(%{event: "delete_thread"}, socket) do
+    {:noreply, socket
+               |> put_flash(:error, "#{socket.assigns.recipient} has deleted the thread")
+               |> redirect(to: Routes.live_path(socket, LutisWeb.MessagingIndexLive))}
+  end
 end

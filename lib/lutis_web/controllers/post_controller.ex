@@ -80,6 +80,6 @@ defmodule LutisWeb.PostController do
     post = Posts.get_post_by_url_id(id)
     Posts.create_upvote(post, conn.assigns.current_user)
     conn
-    |> redirect(to: Routes.post_path(conn, :show, Accounts.get_username!(post.author), id, action: true))
+    |> redirect(to: "#{Routes.post_path(conn, :show, Accounts.get_username!(post.author), id, action: true)}#view")
   end
 end

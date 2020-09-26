@@ -1,6 +1,4 @@
-<%= if (Plug.Conn.get_session(@conn, :user_id) == nil) do %>
-  <%= render "login_bar.html", assigns%>
-<% else %>
-  <%= render "logged_in_bar.html", assigns%>
-<%end%>
+<%= navbar(assigns) %>
+<p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+<p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 <%= @inner_content %>
