@@ -11,8 +11,9 @@ defmodule Lutis.Posts.Post do
     field :topic, :string
     field :title, :string
     field :views, :integer
+    field :upvotes, :integer
     field :url_id, :integer
-    has_many :upvotes, Upvote
+    has_many :user_upvotes, Upvote
 
     timestamps()
   end
@@ -22,5 +23,11 @@ defmodule Lutis.Posts.Post do
     post
     |> cast(attrs, [:author, :topic, :title, :contents, :url_id])
     |> validate_required([:author, :topic, :title, :contents])
+  end
+
+  @doc false
+  def upvoteChangeset(post, attrs) do
+    post
+    |> cast(attrs, [:upvotes])
   end
 end

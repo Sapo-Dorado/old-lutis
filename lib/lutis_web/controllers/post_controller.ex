@@ -5,8 +5,8 @@ defmodule LutisWeb.PostController do
   alias Lutis.Posts.Post
   alias Lutis.Accounts
 
-  def index(conn, _params) do
-    posts = Posts.list_posts()
+  def index(conn, params) do
+    posts = Posts.list_posts(params)
     render(conn, "index.html", posts: posts)
   end
 

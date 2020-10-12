@@ -7,6 +7,7 @@ defmodule Lutis.Repo.Migrations.CreatePosts do
       add :topic, :string
       add :title, :string
       add :contents, :string
+      add :upvotes, :integer, default: 0
       add :views, :integer, default: 0
       add :url_id, :integer
 

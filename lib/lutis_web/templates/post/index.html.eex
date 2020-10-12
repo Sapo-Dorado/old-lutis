@@ -2,6 +2,11 @@
 <div class="box center">
   <h1>Listing Posts</h1>
   <span><%= link "New Post", to: Routes.post_path(@conn, :new), class: "btn btn-a round"%></span>
+  <%= form_for @conn, Routes.post_path(@conn, :index), [method: :get], fn f -> %>
+    <%= search_input f, :query %>
+    <%= select f, :order, ["Most Upvoted": "upvoted", "Most Recent": "recent"] %>
+    <%= submit "Search" %>
+  <% end %>
   <%= for post <- @posts do %>
     <%= showPost(post, assigns) %>
     <br>

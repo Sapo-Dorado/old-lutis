@@ -7,7 +7,24 @@ defmodule Lutis.Posts do
 
   use Bitwise
 
-  def list_posts do
+  def list_posts(%{"query" => query, "order" => order}) do
+    wildcard_search = "%#{query}%"
+
+    query = from p in Post,
+      where: ilike(p.title, ^wildcard_search),
+      or_where: ilike(p.topic, ^wildcard_search)
+
+    case order do
+      "upvoted" ->
+        from(p in query, order_by: [desc: p.upvotes, asc: p.id])
+        |> Repo.all()
+      "recent" ->
+        from(p in query, order_by: [desc: p.id])
+        |> Repo.all()
+    end
+  end
+
+  def list_posts(_params) do
     Repo.all(Post)
   end
 
@@ -75,6 +92,9 @@ defmodule Lutis.Posts do
       |> Repo.one()
       |> Repo.delete()
     end
+    post
+    |> Post.upvoteChangeset(%{upvotes: count_upvotes(post)})
+    |> Repo.update()
   end
 
   def check_author(conn, post) do
