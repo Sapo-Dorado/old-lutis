@@ -1,0 +1,16 @@
+<div class="box">
+  <h1>Listing Posts</h1>
+  <span><%= link "New Post", to: Routes.post_path(@socket, :new), class: "btn btn-a round"%></span>
+  <%= f = form_for :search, Routes.live_path(@socket, LutisWeb.PostIndexLive), [method: :get]%>
+    <%= search_input f, :query, value: @query %>
+    <%= select f, :order, ["Most Upvoted": "upvoted", "Most Recent": "recent"], selected: @order %>
+    <%= submit "Search" %>
+  </form>
+  <div 
+       phx-hook="InfiniteScroll">
+    <%= for post <- @posts do %>
+      <%= showPost(post, assigns) %>
+      <br>
+    <% end %>
+  </div>
+</div>

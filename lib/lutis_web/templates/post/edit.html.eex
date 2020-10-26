@@ -1,6 +1,6 @@
 <script src="https://unpkg.com/feather-icons"></script>
 <div class="box">
-  <% author = Lutis.Accounts.get_username!(@post.author) %>
+  <% author = Lutis.Posts.get_author(@post) %>
   <h1>
     Edit Post
     <%= if Lutis.Posts.check_author(@conn, @post) do%>
@@ -8,8 +8,8 @@
     <%end%>
   </h1>
 
-  <%= render "form.html", Map.put(assigns, :action, Routes.post_path(@conn, :update, Lutis.Accounts.get_username!(@post.author), @post.url_id)) %>
+  <%= render "form.html", Map.put(assigns, :action, Routes.post_path(@conn, :update, author, @post.url_id)) %>
 
-  <span><%= link "Back", to: Routes.post_path(@conn, :index) %></span>
+  <span><%= link "Back", to: Routes.live_path(@conn, LutisWeb.PostIndexLive) %></span>
 </div>
 <script>feather.replace()</script>

@@ -5,11 +5,6 @@ defmodule LutisWeb.PostController do
   alias Lutis.Posts.Post
   alias Lutis.Accounts
 
-  def index(conn, params) do
-    posts = Posts.list_posts(params)
-    render(conn, "index.html", posts: posts)
-  end
-
   def new(conn, _params) do
     changeset = Posts.change_post(%Post{})
     render(conn, "new.html", changeset: changeset)
@@ -20,7 +15,7 @@ defmodule LutisWeb.PostController do
       {:ok, post} ->
         conn
         |> put_flash(:info, "Post created successfully.")
-        |> redirect(to: Routes.post_path(conn, :show, Accounts.get_username!(post.author), post.url_id))
+        |> redirect(to: Routes.post_path(conn, :show, Posts.get_author(post), post.url_id))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
@@ -55,7 +50,7 @@ defmodule LutisWeb.PostController do
         {:ok, post} ->
           conn
           |> put_flash(:info, "Post updated successfully.")
-          |> redirect(to: Routes.post_path(conn, :show, Accounts.get_username!(post.author), post.url_id))
+          |> redirect(to: Routes.post_path(conn, :show, Posts.get_author(post), post.url_id))
 
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "edit.html", post: post, changeset: changeset)
@@ -80,6 +75,6 @@ defmodule LutisWeb.PostController do
     post = Posts.get_post_by_url_id(id)
     Posts.create_upvote(post, conn.assigns.current_user)
     conn
-    |> redirect(to: "#{Routes.post_path(conn, :show, Accounts.get_username!(post.author), id, action: true)}#view")
+    |> redirect(to: "#{Routes.post_path(conn, :show, Posts.get_author(post), id, action: true)}#view")
   end
 end

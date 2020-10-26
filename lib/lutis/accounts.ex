@@ -9,9 +9,9 @@ defmodule Lutis.Accounts do import Ecto.Query, warn: false
     |> Repo.preload(:credential)
   end
 
-  def get_user!(id) do
+  def get_user(id) do
     User
-    |> Repo.get!(id)
+    |> Repo.get(id)
     |> Repo.preload(:credential)
   end
 
@@ -24,8 +24,22 @@ defmodule Lutis.Accounts do import Ecto.Query, warn: false
     end
   end
 
-  def get_username!(id) do
-    get_user!(id).username
+  def get_username(id) do
+    case get_user(id) do
+      nil -> nil
+      user -> user.username
+    end
+  end
+
+  def verify_user(conn) do
+    case Plug.Conn.get_session(conn, :user_id) do
+      nil -> nil
+      user_id ->
+        case Repo.get(User, user_id) do
+          nil -> nil
+          user -> user.id
+        end
+    end
   end
 
   def create_user(attrs \\ %{}) do

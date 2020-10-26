@@ -31,8 +31,8 @@ defmodule LutisWeb.MessagingIndexLive do
   end
 
   def show_thread(assigns, thread) do
-    user1 = Lutis.Accounts.get_username!(thread.user1)
-    user2 = Lutis.Accounts.get_username!(thread.user2)
+    user1 = Lutis.Accounts.get_username(thread.user1)
+    user2 = Lutis.Accounts.get_username(thread.user2)
     recipient = if thread.user2 == assigns.user_id, do: user1, else: user2
     ~L"""
     <a class="unread-icon">

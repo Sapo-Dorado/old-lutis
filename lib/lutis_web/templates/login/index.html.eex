@@ -1,7 +1,7 @@
 <div class="box center">
     <center>
     <h1>Log In</h1>
-    <%= render "login_form.html", Map.put(assigns, :action, Routes.session_path(@conn, :create)) %>
+    <%= render "login_form.html", Map.put(assigns, :action, Routes.session_path(@conn, :create, req: @req)) %>
     </center>
 </div>
 

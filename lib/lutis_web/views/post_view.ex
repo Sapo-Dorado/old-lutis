@@ -1,7 +1,7 @@
 defmodule LutisWeb.PostView do
   use LutisWeb, :view
 
-  alias Lutis.Accounts
+  alias Lutis.{Posts,Accounts}
 
   def markdown(body) do
     body
@@ -20,20 +20,6 @@ defmodule LutisWeb.PostView do
     String.replace(body, "&amp;", "&")
   end
 
-  def showPost(post, assigns) do
-    author = Accounts.get_username!(post.author)
-    ~L"""
-    <a class="info-button post-button" href="<%=Routes.post_path(@conn, :show, author, post.url_id)%>">
-      <strong><%= post.title %></strong>
-      <br>
-      <%= post.topic %>
-      <br>
-      <i data-feather="eye" width="20" height="20"></i>&nbsp;<%= post.views %>&ensp;
-      <i data-feather="arrow-up" width="20" height="20"></i>&nbsp;<%= Lutis.Posts.count_upvotes(post) %>
-    </a>
-    """
-  end
-
   def delete_button(assigns, author) do
     icon = raw("<i data-feather=\"trash-2\"></i>")
     ~L"""
@@ -44,9 +30,9 @@ defmodule LutisWeb.PostView do
   end
 
   def edit_button(assigns) do
-    test = Accounts.get_username!(assigns.post.author)
+    author = Posts.get_author(assigns.post)
     ~L"""
-    <a href="<%=Routes.post_path(@conn, :edit, test, @post.url_id) %>" class="edit-post-button">
+    <a href="<%=Routes.post_path(@conn, :edit, author, @post.url_id) %>" class="edit-post-button">
       <i data-feather="edit-2"></i>
     </a>
     """

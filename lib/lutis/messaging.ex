@@ -50,30 +50,27 @@ defmodule Lutis.Messaging do
   end
 
   #Message Functions
-  def message_stream(thread, nil = _id) do
+  def message_stream(thread) do
     Ecto.Query.from(m in Message, where: m.thread_id == ^thread.id, order_by: [desc: m.id])
     |> Repo.stream()
   end
 
-  def message_stream(thread, id) do
-    Ecto.Query.from(m in Message, where: m.thread_id == ^thread.id, where: m.id < ^id, order_by: [desc: m.id])
-    |> Repo.stream()
-  end
-
-  def extract_messages(thread, num, info) do
-    case Repo.transaction(fn() -> Enum.reverse(message_stream(thread, info) |> Stream.take(num)) end) do
+  def get_batch(message_stream, chunk_size) do
+    case Repo.transaction(fn() -> message_stream |> Stream.take(chunk_size) |> Enum.reverse() end) do
       {:ok, message_list} ->
         case message_list do
           [] -> {:ok, message_list, nil}
           _  ->
-            id = hd(message_list).id
-            query = from m in Message,
-                      where: m.thread_id == ^thread.id,
-                      where: m.id < ^id,
-                      order_by: [desc: m.id]
-            case Repo.one(first(query)) do
-              nil -> {:ok, message_list, nil}
-              _ -> {:ok, message_list, id}
+            case Repo.transaction(fn() -> message_stream |> Stream.drop(chunk_size) end) do
+              {:ok, new_stream} ->
+                case Repo.transaction(fn() -> new_stream |> Stream.take(1) |> Enum.to_list() end) do
+                  {:ok, []} ->
+                    {:ok, message_list, nil}
+                  {:ok, _} ->
+                    {:ok, message_list, new_stream}
+                  error -> error
+                end
+              error -> error
             end
         end
       error -> error

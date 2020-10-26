@@ -1,14 +1,14 @@
 <div class="box">
   <h1><%=@recipient%></h1>
   <table>
-    <%= if @last_id != nil do%>
+    <%= if @message_stream != nil do%>
       <%= _ = form_for :message, "#", [phx_submit: "load_messages"]%>
         <%= submit "load more messages", class: "btn btn-a btn-sm", id: "load" %>
       </form>
     <% end %>
     <%= for message <- @messages do %>
       <tr>
-        <td><%= Lutis.Accounts.get_username!(message.author)%></td>
+        <td><%= Lutis.Accounts.get_username(message.author)%></td>
         <td><%= message.contents%></td>
         <td><%= message.time_sent%></td>
       </tr>

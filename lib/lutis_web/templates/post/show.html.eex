@@ -1,6 +1,6 @@
 <script src="https://unpkg.com/feather-icons"></script>
 <div class="box">
-  <% author = Lutis.Accounts.get_username!(@post.author) %>
+  <% author = Lutis.Posts.get_author(@post) %>
   <h1>
   <%= @post.title%>&nbsp;
   <%= if Lutis.Posts.check_author(@conn, @post) do%>
@@ -15,6 +15,6 @@
   <br>
 
   <%= post_info(assigns, author) %>
-  <span><%= link "Back", to: Routes.post_path(@conn, :index), id: "view"%></span>
+  <span><%= link "Back", to: Routes.live_path(@conn, LutisWeb.PostIndexLive)%></span>
 </div>
 <script>feather.replace()</script>

@@ -4,10 +4,11 @@ defmodule Lutis.Posts do
   alias Lutis.Repo
 
   alias Lutis.Posts.{Post, Upvote}
+  alias Lutis.Accounts
 
   use Bitwise
 
-  def list_posts(%{"query" => query, "order" => order}) do
+  def post_stream(%{"search" => %{"query" => query, "order" => order}}) do
     wildcard_search = "%#{query}%"
 
     query = from p in Post,
@@ -17,15 +18,30 @@ defmodule Lutis.Posts do
     case order do
       "upvoted" ->
         from(p in query, order_by: [desc: p.upvotes, asc: p.id])
-        |> Repo.all()
       "recent" ->
         from(p in query, order_by: [desc: p.id])
-        |> Repo.all()
     end
+    |> Repo.stream()
   end
 
-  def list_posts(_params) do
-    Repo.all(Post)
+  def post_stream(params) do
+    post_stream(%{"search" => %{"query" => nil, "order" => "upvoted"}})
+  end
+
+  def get_batch(post_stream, chunk_size) do
+    case Repo.transaction(fn() -> Stream.take(post_stream, chunk_size) |> Enum.to_list() end) do
+      {:ok, post_list} ->
+        case post_list do
+          [] -> {:ok, post_list, nil}
+          _ ->
+            case Repo.transaction(fn() -> Stream.drop(post_stream, chunk_size) end) do
+              {:ok, new_stream} ->
+                {:ok, post_list, new_stream}
+              error -> error
+            end
+        end
+      error -> error
+    end
   end
 
   def get_post!(id), do: Repo.get!(Post, id)
@@ -98,6 +114,14 @@ defmodule Lutis.Posts do
   end
 
   def check_author(conn, post) do
-    conn.assigns.current_user == post.author
+    Accounts.verify_user(conn) == post.author
   end
+
+  def get_author(post) do
+    case Accounts.get_username(post.author) do
+      nil -> "<deleted-author>"
+      username -> username
+    end
+  end
+
 end

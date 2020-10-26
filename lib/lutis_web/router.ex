@@ -2,6 +2,7 @@ defmodule LutisWeb.Router do
   use LutisWeb, :router
 
   alias LutisWeb.Router.Helpers, as: Routes
+  alias Lutis.Accounts
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -64,7 +65,8 @@ defmodule LutisWeb.Router do
     delete "/messages/:recipient", ThreadController, :delete
     post "/messages/:recipient", ThreadController, :send
 
-    resources "/posts", PostController, only: [:index, :new, :create]
+    resources "/posts", PostController, only: [:new, :create]
+    live "/posts", PostIndexLive
     get "/posts/:user/:id", PostController, :show
     get "/posts/:user/:id/edit", PostController, :edit
     patch "/posts/:user/:id", PostController, :update
@@ -81,11 +83,11 @@ defmodule LutisWeb.Router do
 
 
   defp authenticate_user(conn, _) do
-    case get_session(conn, :user_id) do
+    case Accounts.verify_user(conn) do
       nil ->
         conn
         |> Phoenix.Controller.put_flash(:error, "Login required")
-        |> Phoenix.Controller.redirect(to: Routes.login_path(conn, :index))
+        |> Phoenix.Controller.redirect(to: Routes.login_path(conn, :index, req: conn.request_path))
         |> halt()
       user_id ->
         assign(conn, :current_user, user_id)
@@ -93,7 +95,7 @@ defmodule LutisWeb.Router do
   end
 
   defp ensure_no_session(conn, _) do
-    case get_session(conn, :user_id) do
+    case Accounts.verify_user(conn) do
       nil -> 
         conn
       _user_id ->
