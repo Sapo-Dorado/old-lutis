@@ -6,6 +6,7 @@ defmodule LutisWeb.SessionController do
   def create(conn, %{"user" => %{"email" => email, "password" => password}, "req" => req}) do
     case Accounts.authenticate_by_email_password(email, password) do
       {:ok, user} ->
+        Accounts.update_login(user)
         conn
         |> put_flash(:info, "Welcome Back!")
         |> put_session(:user_id, user.id)

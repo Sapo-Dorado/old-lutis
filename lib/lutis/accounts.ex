@@ -105,4 +105,7 @@ defmodule Lutis.Accounts do import Ecto.Query, warn: false
     end
   end
 
+  def update_login(user) do
+    update_user(user, %{last_login: NaiveDateTime.utc_now})
+  end
 end
