@@ -3,7 +3,7 @@ defmodule Lutis.Posts do
   import Ecto.Query, warn: false
   alias Lutis.Repo
 
-  alias Lutis.Posts.{Post, Upvote}
+  alias Lutis.Posts.{Post, Upvote, Comment}
   alias Lutis.Accounts
 
   use Bitwise
@@ -24,7 +24,7 @@ defmodule Lutis.Posts do
     |> Repo.stream()
   end
 
-  def post_stream(params) do
+  def post_stream(_params) do
     post_stream(%{"search" => %{"query" => nil, "order" => "upvoted"}})
   end
 
@@ -113,15 +113,53 @@ defmodule Lutis.Posts do
     |> Repo.update()
   end
 
-  def check_author(conn, post) do
+  def check_author(%Plug.Conn{} = conn, post) do
     Accounts.verify_user(conn) == post.author
   end
 
-  def get_author(post) do
-    case Accounts.get_username(post.author) do
+  def check_author(session, post) do
+    session["user_id"] == post.author
+  end
+
+  def get_author(obj) do
+    case Accounts.get_username(obj.author) do
       nil -> "<deleted-author>"
       username -> username
     end
   end
 
+  def comment_stream(post) do
+    query = from c in Comment,
+      where: c.post_id == ^post.id,
+      order_by: [desc: c.id]
+    Repo.stream(query)
+  end
+
+  def get_batch(comment_stream, chunk_size) do
+    case Repo.transaction(fn() -> Stream.take(comment_stream, chunk_size) |> Enum.to_list() end) do
+      {:ok, comment_list} ->
+        case comment_list do
+          [] -> {:ok, comment_list, nil}
+          _ ->
+            case Repo.transaction(fn() -> Stream.drop(comment_stream, chunk_size) end) do
+              {:ok, new_stream} ->
+                {:ok, comment_list, new_stream}
+              error -> error
+            end
+        end
+      error -> error
+    end
+  end
+
+  def get_comment!(id), do: Repo.get!(Comment, id)
+
+  def create_comment(contents, author, post) do
+    %Comment{}
+    |> Comment.changeset(%{contents: contents, author: author, post_id: post.id})
+    |> Repo.insert()
+  end
+
+  def change_comment(%Comment{} = comment, attrs \\ %{}) do
+    Comment.changeset(comment, attrs)
+  end
 end

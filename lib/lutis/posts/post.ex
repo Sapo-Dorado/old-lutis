@@ -3,7 +3,7 @@ defmodule Lutis.Posts.Post do
   import Ecto.Changeset
   use PhoenixHtmlSanitizer, :strip_tags
 
-  alias Lutis.Posts.Upvote
+  alias Lutis.Posts.{Upvote, Comment}
 
   schema "posts" do
     field :author, :integer
@@ -14,6 +14,7 @@ defmodule Lutis.Posts.Post do
     field :upvotes, :integer
     field :url_id, :integer
     has_many :user_upvotes, Upvote
+    has_many :user_comments, Comment
 
     timestamps()
   end

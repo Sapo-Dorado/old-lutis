@@ -1,0 +1,23 @@
+<div class="box">
+  <% author = Lutis.Posts.get_author(@post) %>
+  <h1>
+  <%= @post.title%>&nbsp;
+  <%= if Lutis.Posts.check_author(@session, @post) do%>
+    <%= edit_button(assigns) %>
+  <% end %>
+  </h1>
+
+  <strong>by: <%= author %></strong>
+  <br>
+  <br>
+  <%= markdown(@post.contents)%>
+  <br>
+
+  <%= post_info(assigns) %>
+  <span><%= link "Back", to: Routes.live_path(@socket, LutisWeb.PostIndexLive)%></span>
+  <br>
+  <br>
+  <div phx-hook="InfiniteScroll">
+    <%= comments(assigns) %>
+  </div>
+</div>

@@ -54,7 +54,7 @@ defmodule LutisWeb.MessagingLive do
                 {:noreply, socket
                             |> assign(:messages, new_messages ++ socket.assigns.messages)
                             |> assign(:message_stream, message_stream)}
-          {:error, _} -> redirect(socket, to: Routes.thread_path(socket, :index))
+          {:error, _} -> {:noreply, socket}
         end
     end
   end

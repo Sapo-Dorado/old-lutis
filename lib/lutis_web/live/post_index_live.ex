@@ -39,7 +39,7 @@ defmodule LutisWeb.PostIndexLive do
             {:noreply, socket
                        |> assign(:posts, socket.assigns.posts ++ posts)
                        |> assign(:post_stream, post_stream)}
-          {:error, _} -> redirect(socket, to: Routes.home_page_path(socket, :index))
+          {:error, _} -> {:noreply, socket}
         end
     end
   end
@@ -52,12 +52,20 @@ defmodule LutisWeb.PostIndexLive do
       <br>
       <%= post.topic %>
       <br>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      <%= eye_icon() %>
       &nbsp;<%= post.views %>&ensp;
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-up"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+      <%= upvote_icon() %>
       &nbsp;<%= Lutis.Posts.count_upvotes(post) %>
     </a>
     """
+  end
+
+  def eye_icon() do
+    raw(~s(<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>))
+  end
+
+  def upvote_icon() do
+    raw(~s(<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-up"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>))
   end
 
 end

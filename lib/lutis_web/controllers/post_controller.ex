@@ -22,15 +22,6 @@ defmodule LutisWeb.PostController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-      post = Posts.get_post_by_url_id(id)
-    if (conn.query_string == "") do
-      render(conn, "show.html", post: Posts.add_view(post))
-    else
-      render(conn, "show.html", post: post)
-    end
-  end
-
   def edit(conn, %{"id" => id}) do
     post = Posts.get_post_by_url_id(id)
     if !(post.author == conn.assigns.current_user) do
@@ -71,10 +62,9 @@ defmodule LutisWeb.PostController do
     end
   end
 
-  def upvote(conn, %{"id" => id}) do
+  def show(conn, %{"id" => id}) do
     post = Posts.get_post_by_url_id(id)
-    Posts.create_upvote(post, conn.assigns.current_user)
-    conn
-    |> redirect(to: "#{Routes.post_path(conn, :show, Posts.get_author(post), id, action: true)}#view")
+    Posts.add_view(post)
+    live_render(conn, LutisWeb.PostLive, session: %{"post_id" => id})
   end
 end

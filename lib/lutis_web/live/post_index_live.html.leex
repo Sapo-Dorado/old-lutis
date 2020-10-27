@@ -6,8 +6,7 @@
     <%= select f, :order, ["Most Upvoted": "upvoted", "Most Recent": "recent"], selected: @order %>
     <%= submit "Search" %>
   </form>
-  <div 
-       phx-hook="InfiniteScroll">
+  <div phx-hook="InfiniteScroll">
     <%= for post <- @posts do %>
       <%= showPost(post, assigns) %>
       <br>
