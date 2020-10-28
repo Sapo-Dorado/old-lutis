@@ -96,7 +96,7 @@ defmodule LutisWeb.Router do
   end
 
   defp authenticate_admin(conn, _) do
-    allowed_admin = ["sapo_dorado"]
+    allowed_admin = ["sapo_dorado", "prometheus"]
     if not Accounts.get_username(conn.assigns.current_user) in allowed_admin do
       conn
       |> Phoenix.Controller.put_flash(:error, "Invalid Permissions")
