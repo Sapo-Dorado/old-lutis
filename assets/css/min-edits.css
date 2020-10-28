@@ -1,4 +1,26 @@
-/* Copyright 2014 Owen Versteeg; MIT licensed */
+:root {
+	--color-A:#ff997f;
+    --color-B:#ffaacc;
+	--color-C:#ff6b74;
+	--color-D:#99824d;
+	--color-light:#FFF;
+	--color-dark:#333;
+
+	--gap: 24px;
+ 	--content-gap: 40px;
+ 	--main-width: 640px;
+  	--header-height: 60px;
+  	--footer-height: 60px;
+	--radius: 8px;
+	--theme: #fff;
+	--entry: #fff;
+	--primary: rgba(0, 0, 0, 0.88);
+	--secondary: rgba(0, 0, 0, 0.56);
+	--content: rgba(0, 0, 0, 0.88);
+
+	--border: #eee;
+
+}
 body,textarea,input,select{background:0;border-radius:0;font:16px;
 font-family:BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;}
 .smooth{transition:all .2s}
@@ -20,6 +42,7 @@ form>*{display:block;margin-bottom:10px}
 .c2{width:16.66%}
 .c1{width:8.33%}
 h1{font-size:3em}
+h2{text-align: left;}
 .btn,h2{font-size:2em}
 .ico{font:33px;font-family:BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;}
 .addon,.btn-sm,textarea,input,select{outline:0;font-size:16px}
@@ -30,8 +53,16 @@ textarea,input[type=text]{-webkit-appearance:none;width:224.667px}
 .table th,.table td{padding:.5em;text-align:left}
 .table tbody>:nth-child(2n-1){background:#ddd}
 .msg{padding:1.5em;background:#def;border-left:5px solid #59d}
-.box{background:#FFFBFC;padding: 40px;border-radius: 10px; position:relative;}
-body {background-color:#24252a;}
+body {background-color:var(--color-dark);}
+
+.box{
+  position: relative;
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+  max-width: calc(var(--main-width) + var(--gap) * 2);
+  margin-left: auto;
+  margin-right: auto;
+  padding: var(--gap);
+}
 
 .center {
   margin: 0em;
@@ -45,14 +76,14 @@ body {background-color:#24252a;}
 .btn{background:#999;border-radius:6px;color:#FFF;border:0;cursor:pointer;display:inline-block;margin:5px;padding:12px 30px 14px;text-decoration:none}
 .btn:hover{background:#888}
 .btn:active,.btn:focus{background:#777}
-.btn-a{color:#FFF;background:#ff997f}
-.btn-a:hover{color:#ff997f;background:#FFF}
+.btn-a{color:var(--color-light);background:var(--color-A)}
+.btn-a:hover{color:var(--color-A);background:var(--color-light)}
 .btn-a:active,.btn-b:focus{color:transparent;}
-.btn-b{color:#ffaacc;background:#FFF}
-.btn-b:hover{color:#FFF;background:#ffaacc}
-.btn-b:active,.btn-a:focus{color:transparent;background:#ffaacc}
-.btn-c{background:#ff6b74}
-.btn-c:hover{color:#ff6b74;background:#FFF}
+.btn-b{color:var(--color-B);background:var(--color-light)}
+.btn-b:hover{color:var(--color-light);background:var(--color-B)}
+.btn-b:active,.btn-a:focus{color:transparent;}
+.btn-c{background:var(--color-C)}
+.btn-c:hover{color:var(--color-C);background:var(--color-light)}
 .btn-c:active,.btn-c:focus{color:transparent;}
 .btn-sm{border-radius:4px;padding:10px 14px 11px}
 .btn-sign-up{border:5px #ffaacc;border-radius:2em;padding:.5em;font-size:6em; background:#333}
@@ -79,30 +110,6 @@ header {
   box-sizing:border-box;
 }
 
-.info-button{
-    border-radius:6px;
-    color:#FFF;
-    border:0;
-    cursor:pointer;
-    display:inline-block;
-    margin:5px;
-    text-decoration:none;
-    font-size:24px;
-    text-align:center;
-}
-
-.post-button{
-    background:#646464;
-    height:90px;
-    width: 100%;
-}
-
-.thread-button{
-    background:#808080;
-    height:50px;
-    width:70%;
-}
-
 .edit-post-button{
     color:#000;
 }
@@ -117,3 +124,68 @@ header {
 .unread-icon{
     width:10%;
 }
+
+/*Post-entry is used to denote a post. We can change the name if you like. There are going to be some parameters in the following lines. We can add as many as we need.*/
+.post-entry {
+  position: relative;
+  margin-bottom: var(--gap);
+  padding: var(--gap);
+  background: var(--entry);
+  border-radius: var(--radius);
+  transition: transform 0.1s;
+}
+.post-entry:active {
+  transform: scale(0.96);
+}
+/*▼Post title can go here▼*/
+.entry-header h2 {
+  font-size: 24px;
+  text-align: left;
+}
+/*▼A preview of the content, or the content itself can go there▼*/
+.entry-content {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  color: var(--secondary);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow: hidden;
+  display: -webkit-box;
+  text-decoration: none;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+/*▼this is where the views, upvote count, etc. can go. We may need to make multiple classes for this I'm not sure*/
+.entry-footer {
+  color: var(--secondary);
+  font-size: 13px;
+}
+/*▼this just lets the link work▼*/
+.entry-link {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.content {
+  padding: var(--gap);
+  background: var(--entry);
+  border-radius: var(--radius);
+  display: inline-block;
+  text-decoration:none;
+}
+
+.post-list { 
+  position: relative;
+  margin-bottom: var(--gap);
+  padding: var(--gap);
+  background: var(--entry);
+  border-radius: var(--radius);
+}
+
+.password-input {
+  width: 100%
+}
+

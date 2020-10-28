@@ -15,7 +15,7 @@ defmodule LutisWeb.SessionController do
       {:error, :unauthorized} ->
         conn
         |> put_flash(:error, "Bad email/password combination")
-        |> redirect(to: Routes.login_path(conn, :index))
+        |> redirect(to: Routes.login_path(conn, :index, req: req))
     end
   end
 

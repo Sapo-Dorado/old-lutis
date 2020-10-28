@@ -1,23 +1,29 @@
 <div class="box">
-  <% author = Lutis.Posts.get_author(@post) %>
-  <h1>
-  <%= @post.title%>&nbsp;
-  <%= if Lutis.Posts.check_author(@session, @post) do%>
-    <%= edit_button(assigns) %>
-  <% end %>
-  </h1>
+  <div class="post-list">
+    <% author = Lutis.Posts.get_author(@post) %>
+    <span><%= link "Back", to: Routes.live_path(@socket, LutisWeb.PostIndexLive)%></span>
+    <h1>
+    <%= @post.title%>&nbsp;
+    <%= if Lutis.Posts.check_author(@session, @post) do%>
+      <%= edit_button(assigns) %>
+    <% end %>
+    </h1>
 
-  <strong>by: <%= author %></strong>
-  <br>
-  <br>
-  <%= markdown(@post.contents)%>
-  <br>
-
-  <%= post_info(assigns) %>
-  <span><%= link "Back", to: Routes.live_path(@socket, LutisWeb.PostIndexLive)%></span>
-  <br>
-  <br>
+    <strong>by: <%= author %></strong>
+    <br>
+    <br>
+    <%= markdown(@post.contents)%>
+    <br>
+    <%= post_info(assigns) %>
+    <%= f = form_for :comment, "#", [phx_submit: "comment"]%>
+      <%= textarea(f, :contents) %>
+      <%= submit "Comment", class: "btn btn-a btn-sm" %>
+    </form>
+  </div>
   <div phx-hook="InfiniteScroll">
-    <%= comments(assigns) %>
+
+    <%= for comment <- @comments do %>
+      <%= show_comment(comment, assigns) %>
+    <% end %>
   </div>
 </div>

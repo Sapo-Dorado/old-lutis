@@ -30,6 +30,12 @@ defmodule Lutis.Accounts do import Ecto.Query, warn: false
       user -> user.username
     end
   end
+  def get_color(id) do
+    case get_user(id) do
+      nil -> nil
+      user -> user.color
+    end
+  end
 
   def verify_user(conn) do
     case Plug.Conn.get_session(conn, :user_id) do

@@ -1,5 +1,5 @@
 <div class="box">
-  <h1><%=@recipient%></h1>
+  <h1><%=@recipient%> <%=delete_button(assigns, @recipient)%></h1>
   <table>
     <%= if @message_stream != nil do%>
       <%= _ = form_for :message, "#", [phx_submit: "load_messages"]%>
@@ -7,17 +7,15 @@
       </form>
     <% end %>
     <%= for message <- @messages do %>
-      <tr>
-        <td><%= Lutis.Accounts.get_username(message.author)%></td>
-        <td><%= message.contents%></td>
-        <td><%= message.time_sent%></td>
-      </tr>
+      <%= showMessage(message, assigns) %>
     <% end %>
   </table>
-  <%= f = form_for :message, "#", [phx_submit: "send_message"]%>
-    <%= text_input f, :contents %>
-    <%= submit "Send", class: "btn btn-a btn-sm", id: "send"%>
-  </form>
-  <span><%= link "Back", to: Routes.live_path(@socket, LutisWeb.MessagingIndexLive)%></span>
-  <a name="view" id="view"></a>
+  <div class="post-list">
+    <%= f = form_for :message, "#", [phx_submit: "send_message"]%>
+      <%= text_input f, :contents %>
+      <%= submit "Send", class: "btn btn-a btn-sm", id: "send"%>
+    </form>
+    <span><%= link "Back", to: Routes.live_path(@socket, LutisWeb.MessagingIndexLive)%></span>
+    <a name="view" id="view"></a>
+  </div>
 </div>

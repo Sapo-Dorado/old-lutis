@@ -26,7 +26,7 @@ defmodule LutisWeb.PostIndexLive do
         {:ok, socket
               |> assign(:posts, posts)
               |> assign(:post_stream, post_stream)}
-      {:error, _} -> redirect(socket, to: Routes.home_page_path(socket, :index))
+      {:error, _} -> {:ok, socket |> redirect(to: Routes.home_page_path(socket, :index))}
     end
   end
 
@@ -47,16 +47,18 @@ defmodule LutisWeb.PostIndexLive do
   def showPost(post, assigns) do
     author = Posts.get_author(post)
     ~L"""
-    <a class="info-button post-button" href="<%=Routes.post_path(@socket, :show, author, post.url_id)%>">
-      <strong><%= post.title %></strong>
-      <br>
-      <%= post.topic %>
-      <br>
-      <%= eye_icon() %>
-      &nbsp;<%= post.views %>&ensp;
-      <%= upvote_icon() %>
-      &nbsp;<%= Lutis.Posts.count_upvotes(post) %>
-    </a>
+    <article class="post-entry">
+      <div class="entry-header"><h2><%= post.title %></h2></div>
+      <section class="entry-content">
+        <%= post.topic %>
+      </section>
+      <section class="entry-footer">
+        <%= eye_icon() %> &nbsp;<%= post.views %>
+        &ensp; <%= upvote_icon() %>
+        &nbsp;<%= Lutis.Posts.count_upvotes(post) %>
+      </section>
+      <a class="entry-link" href="<%=Routes.post_path(@socket, :show, author, post.url_id)%>"></a>
+    </article>
     """
   end
 

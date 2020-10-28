@@ -1,3 +1,11 @@
+<style>
+  body {
+    background-image: url(<%=Routes.static_path(@socket,"/images/background.svg")%>);
+    background-repeat: no-repeat;
+    background-position:top;
+    background-size:cover;
+  }
+</style>
 <%=live_bar(assigns)%>
 <p class="alert alert-info" role="alert" phx-value-key="info"><%= live_flash(@flash, :info) %></p>
 <p class="alert alert-danger" role="alert" phx-value-key="error"><%= live_flash(@flash, :error) %></p>

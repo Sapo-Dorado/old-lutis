@@ -1,5 +1,5 @@
-<div class="box center">
-  <h1>New Post</h1>
+<div class="box center content">
+  <h1>&emsp;&emsp;&emsp;New Post&emsp;&emsp;&emsp;</h1>
 
   <%= render "form.html", Map.put(assigns, :action, Routes.post_path(@conn, :create)) %>
 

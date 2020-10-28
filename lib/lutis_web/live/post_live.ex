@@ -1,7 +1,7 @@
 defmodule LutisWeb.PostLive do
   use LutisWeb, :live_view
 
-  alias Lutis.Posts
+  alias Lutis.{Posts,Accounts}
 
   @load_amount 10
 
@@ -98,24 +98,14 @@ defmodule LutisWeb.PostLive do
     """
   end
 
-  def comments(assigns) do
-    ~L"""
-    <%= f = form_for :comment, "#", [phx_submit: "comment"]%>
-      <%= textarea(f, :contents) %>
-      <%= submit "Comment", class: "btn btn-a btn-sm" %>
-    </form>
-
-    <%= for comment <- @comments do %>
-      <%= show_comment(comment, assigns) %>
-    <% end %>
-    """
-  end
-
   def show_comment(comment, assigns) do
     author = Posts.get_author(comment)
+    color = Accounts.get_color(comment.author)
     ~L"""
-    <%=author%>: <%=comment.contents%>
-    <br>
+    <div class="post-entry">
+      <strong style="color:<%=color%>;"><%=author%>:</strong>
+      <p><%=comment.contents%></p>
+    </div>
     """
   end
 

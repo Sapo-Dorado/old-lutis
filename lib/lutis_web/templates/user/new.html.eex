@@ -1,6 +1,6 @@
-<div class="box center">
+<div class="center content">
   <span><%= link "Back", to: "/" %></span>
-  <h1>New User</h1>
+  <h1>&emsp;New User&emsp;</h1>
 
   <%= render "form.html", Map.put(assigns, :action, Routes.user_path(@conn, :create)) %>
 </div>

@@ -16,7 +16,6 @@ defmodule LutisWeb.LayoutView do
   defp login_bar(assigns) do
     ~L"""
     <a class="logo" href="/"><img src="<%=Routes.static_path(@conn, "/images/navbarlogo.png")%>"></a>
-    <a style="margin:5px;"class="btn btn-a round btn-sm" href="#">View Posts</a>
     <a style="margin:5px;"class="btn btn-b round btn-sm" href="<%=Routes.user_path(@conn, :new)%>">Sign Up</a>
     <a style="margin:5px;"class="btn btn-c round btn-sm" href="<%=Routes.login_path(@conn,:index)%>">Log In</a>
     """
@@ -24,7 +23,7 @@ defmodule LutisWeb.LayoutView do
 
   defp logged_in_bar(assigns) do
     ~L"""
-    <a class="logo" href="/"><img src="<%= Routes.static_path(@conn, "/images/navbarlogo.png")%>"></a>
+    <a class="logo" href="<%=Routes.user_path(@conn, :show)%>"><img src="<%= Routes.static_path(@conn, "/images/navbarlogo.png")%>"></a>
     <a class="btn btn-a round btn-sm" href="<%=Routes.live_path(@conn, LutisWeb.PostIndexLive)%>">View Posts</a>
     <a class="btn btn-b round btn-sm" href="<%=Routes.live_path(@conn,LutisWeb.MessagingIndexLive)%>">View Messages</a>
     <%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
@@ -36,7 +35,7 @@ defmodule LutisWeb.LayoutView do
   defp live_bar(assigns) do
     ~L"""
     <header class="sticky">
-      <a class="logo" href="/"><img src="<%= Routes.static_path(@socket, "/images/navbarlogo.png")%>"></a>
+      <a class="logo" href="<%=Routes.user_path(@socket,:show)%>"><img src="<%= Routes.static_path(@socket, "/images/navbarlogo.png")%>"></a>
       <a class="btn btn-a round btn-sm" href="<%=Routes.live_path(@socket, LutisWeb.PostIndexLive)%>">View Posts</a>
       <a class="btn btn-b round btn-sm" href="<%=Routes.live_path(@socket,LutisWeb.MessagingIndexLive)%>">View Messages</a>
       <%= _ = form_for :logout, Routes.session_path(@socket, :delete), [method: :delete, as: :user]%>

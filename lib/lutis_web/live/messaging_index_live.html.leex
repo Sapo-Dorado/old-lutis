@@ -1,8 +1,8 @@
 <div class="box center">
-  <h1>Messages</h1>
+  <h1>&emsp;Messages&emsp;</h1>
   <%= for thread <- @threads do %>
     <%= show_thread(assigns, thread) %>
     <br>
   <% end %>
-  <span><%= link "New Thread", to: Routes.thread_path(@socket, :new), class: "btn btn-a round" %></span>
+  <span><%= link "New Thread", to: Routes.thread_path(@socket, :new), class: "btn round" %></span>
 </div>

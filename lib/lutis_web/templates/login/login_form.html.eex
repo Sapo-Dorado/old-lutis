@@ -2,7 +2,9 @@
   <div class="form-group">
     <%= text_input f, :email, placeholder: "Email" %>
     <br>
-    <%= password_input f, :password, placeholder: "Password" %>
+    <br>
+    <%= password_input f, :password, placeholder: "Password", class: "password-input" %>
+    <br>
     <br>
     <%= submit "Login", class: "btn btn-a round" %>
   </div>

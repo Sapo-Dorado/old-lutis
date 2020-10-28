@@ -1,4 +1,4 @@
-<div class="box center">
+<div class="center content">
   <span><%= link "Back", to: "/" %></span>
   <h1>Profile</h1>
   <ul>
