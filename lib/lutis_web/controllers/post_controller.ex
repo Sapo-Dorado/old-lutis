@@ -3,7 +3,6 @@ defmodule LutisWeb.PostController do
 
   alias Lutis.Posts
   alias Lutis.Posts.Post
-  alias Lutis.Accounts
 
   def new(conn, _params) do
     changeset = Posts.change_post(%Post{})
@@ -39,7 +38,6 @@ defmodule LutisWeb.PostController do
       case Posts.update_post(post, post_params) do
         {:ok, post} ->
           conn
-          |> put_flash(:info, "Post updated successfully.")
           |> redirect(to: Routes.post_path(conn, :show, Posts.get_author(post), post.url_id))
 
         {:error, %Ecto.Changeset{} = changeset} ->

@@ -1,7 +1,7 @@
 defmodule LutisWeb.PostIndexLive do
   use LutisWeb, :live_view
 
-  alias Lutis.{Posts,Accounts}
+  alias Lutis.Posts
 
   @load_amount 5
 

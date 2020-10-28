@@ -1,8 +1,6 @@
 defmodule LutisWeb.PostView do
   use LutisWeb, :view
 
-  alias Lutis.{Posts,Accounts}
-
   def delete_button(assigns, author) do
     icon = raw("<i data-feather=\"trash-2\"></i>")
     ~L"""

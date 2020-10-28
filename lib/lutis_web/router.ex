@@ -97,7 +97,7 @@ defmodule LutisWeb.Router do
 
   defp authenticate_admin(conn, _) do
     allowed_admin = ["sapo_dorado", "prometheus"]
-    if not Accounts.get_username(conn.assigns.current_user) in allowed_admin do
+    if Accounts.get_username(conn.assigns.current_user) not in allowed_admin do
       conn
       |> Phoenix.Controller.put_flash(:error, "Invalid Permissions")
       |> Phoenix.Controller.redirect(to: Routes.home_page_path(conn, :index))
