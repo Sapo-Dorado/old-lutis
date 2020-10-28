@@ -12,7 +12,7 @@ config :lutis,
 
 # Configures the endpoint
 config :lutis, LutisWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "lutis.io"],
   secret_key_base: "RErBhypdWc7asOmCduHhxBbjmsxW3L32aHC/jtVSi/z3kDilRcF4DEiQWR+sHzMy",
   render_errors: [view: LutisWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Lutis.PubSub,
