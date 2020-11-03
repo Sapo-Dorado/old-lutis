@@ -28,15 +28,15 @@ defmodule Lutis.Posts do
     post_stream(%{"search" => %{"query" => nil, "order" => "upvoted"}})
   end
 
-  def get_batch(post_stream, chunk_size) do
-    case Repo.transaction(fn() -> Stream.take(post_stream, chunk_size) |> Enum.to_list() end) do
-      {:ok, post_list} ->
-        case post_list do
-          [] -> {:ok, post_list, nil}
+  def get_batch(stream, chunk_size) do
+    case Repo.transaction(fn() -> Stream.take(stream, chunk_size) |> Enum.to_list() end) do
+      {:ok, item_list} ->
+        case item_list do
+          [] -> {:ok, item_list, nil}
           _ ->
-            case Repo.transaction(fn() -> Stream.drop(post_stream, chunk_size) end) do
+            case Repo.transaction(fn() -> Stream.drop(stream, chunk_size) end) do
               {:ok, new_stream} ->
-                {:ok, post_list, new_stream}
+                {:ok, item_list, new_stream}
               error -> error
             end
         end
@@ -137,22 +137,6 @@ defmodule Lutis.Posts do
       where: c.post_id == ^post.id,
       order_by: [desc: c.id]
     Repo.stream(query)
-  end
-
-  def get_batch(comment_stream, chunk_size) do
-    case Repo.transaction(fn() -> Stream.take(comment_stream, chunk_size) |> Enum.to_list() end) do
-      {:ok, comment_list} ->
-        case comment_list do
-          [] -> {:ok, comment_list, nil}
-          _ ->
-            case Repo.transaction(fn() -> Stream.drop(comment_stream, chunk_size) end) do
-              {:ok, new_stream} ->
-                {:ok, comment_list, new_stream}
-              error -> error
-            end
-        end
-      error -> error
-    end
   end
 
   def get_comment!(id), do: Repo.get!(Comment, id)

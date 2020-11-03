@@ -16,7 +16,7 @@ defmodule LutisWeb.MessagingLive do
     if(thread != nil) do
       LutisWeb.Endpoint.subscribe("message_#{thread.id}")
       Messaging.mark_as_read(thread, session["user_id"])
-      case Messaging.get_batch(Messaging.message_stream(thread), @load_amount) do
+      case Messaging.get_message_batch(Messaging.message_stream(thread), @load_amount) do
         {:ok, message_list, message_stream} -> 
           {:ok, socket
                 |> assign(:session, session)
@@ -50,15 +50,15 @@ defmodule LutisWeb.MessagingLive do
     end
   end
 
-  def handle_event("load_messages", _attrs, socket) do
+  def handle_event("load_more", _attrs, socket) do
     case socket.assigns.message_stream do
       nil -> {:noreply, socket}
       _ -> 
-        case Messaging.get_batch(socket.assigns.message_stream, @load_amount) do
+        case Messaging.get_message_batch(socket.assigns.message_stream, @load_amount) do
           {:ok, new_messages, message_stream} -> 
-                {:noreply, socket
-                            |> assign(:messages, new_messages ++ socket.assigns.messages)
-                            |> assign(:message_stream, message_stream)}
+            {:noreply, socket
+                        |> assign(:messages, new_messages ++ socket.assigns.messages)
+                        |> assign(:message_stream, message_stream)}
           {:error, _} -> {:noreply, socket}
         end
     end

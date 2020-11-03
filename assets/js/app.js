@@ -36,6 +36,15 @@ Hooks.InfiniteScroll = {
     }
 }
 
+Hooks.LoadMore = {
+    mounted(){
+        let load_button = document.getElementById("load-button")
+        load_button.addEventListener("click", e => {
+            this.pushEvent("load_more", {})
+        })
+    }
+}
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {hooks: Hooks, params: {_csrf_token: csrfToken}})
 

@@ -2,9 +2,7 @@
   <h1><%=@recipient%> <%=delete_button(assigns, @recipient)%></h1>
   <table>
     <%= if @message_stream != nil do%>
-      <%= _ = form_for :message, "#", [phx_submit: "load_messages"]%>
-        <%= submit "load more messages", class: "btn btn-a btn-sm", id: "load" %>
-      </form>
+      <button id="load-button" class="btn btn-a btn-sm" phx-hook="LoadMore">load more messages</button>
     <% end %>
     <%= for message <- @messages do %>
       <%= showMessage(message, assigns) %>

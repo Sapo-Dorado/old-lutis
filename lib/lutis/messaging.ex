@@ -55,7 +55,7 @@ defmodule Lutis.Messaging do
     |> Repo.stream()
   end
 
-  def get_batch(message_stream, chunk_size) do
+  def get_message_batch(message_stream, chunk_size) do
     case Repo.transaction(fn() -> message_stream |> Stream.take(chunk_size) |> Enum.reverse() end) do
       {:ok, message_list} ->
         case message_list do
