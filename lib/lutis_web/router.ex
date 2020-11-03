@@ -34,7 +34,6 @@ defmodule LutisWeb.Router do
   #When user doesn't have to be logged in
   scope "/", LutisWeb do
     pipe_through :browser
-    get "/", HomePageController, :index
     resources "/sessions", SessionController, only: [:create, :delete],
                                               singleton: true
   end
@@ -42,6 +41,7 @@ defmodule LutisWeb.Router do
   #When user shouldn't be logged in
   scope "/", LutisWeb do
     pipe_through [:browser, :check_not_logged_in]
+    get "/", HomePageController, :index
     get "/login", LoginController, :index
     resources "/users", UserController, only: [:new, :create]
   end
@@ -114,8 +114,7 @@ defmodule LutisWeb.Router do
         conn
       _user_id ->
         conn
-        |> Phoenix.Controller.put_flash(:error, "Already Logged in")
-        |> Phoenix.Controller.redirect(to: "/")
+        |> Phoenix.Controller.redirect(to: Routes.live_path(conn, LutisWeb.PostIndexLive))
         |> halt()
     end
   end

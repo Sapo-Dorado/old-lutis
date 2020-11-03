@@ -6,7 +6,7 @@ defmodule LutisWeb.LoginController do
   end
 
   def index(conn, _) do
-    render(conn, "index.html", req: Routes.home_page_path(conn, :index))
+    render(conn, "index.html", req: Routes.live_path(conn, LutisWeb.PostIndexLive))
   end
 
 end
