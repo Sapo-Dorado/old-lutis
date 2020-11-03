@@ -20,7 +20,7 @@
       <%= submit "Comment", class: "btn btn-a btn-sm" %>
     </form>
   </div>
-  <div phx-hook="InfiniteScroll">
+  <div id="comment-list" phx-hook="InfiniteScroll">
 
     <%= for comment <- @comments do %>
       <%= show_comment(comment, assigns) %>

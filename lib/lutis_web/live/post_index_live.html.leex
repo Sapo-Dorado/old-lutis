@@ -8,7 +8,7 @@
     </form>
     <span><%= link "New Post", to: Routes.post_path(@socket, :new), class: "btn btn-a round"%></span>
   </div>
-  <div phx-hook="InfiniteScroll">
+  <div id="post-list" phx-hook="InfiniteScroll">
     <%= for post <- @posts do %>
       <%= showPost(post, assigns) %>
       <br>
