@@ -68,7 +68,7 @@ defmodule LutisWeb.PostLive do
   def markdown(body) do
     body
     |> sanitize
-    |> Earmark.as_html!
+    |> convert_md_to_html
     |> fix_ampersands
     |> raw
   end
@@ -76,6 +76,26 @@ defmodule LutisWeb.PostLive do
   defp sanitize(body) do
     body
     |> String.replace("<", "&lt;")
+  end
+
+  defp convert_md_to_html(content) do
+    content
+    |> convert_video
+    |> Earmark.as_html!
+  end
+
+  def convert_video(body) do
+    video_regex = ~r/!\[.*\]\(https:\/\/www\.youtube\.com\/watch\?v=(.{11})&?(.*)\)|!\[.*\]\(https:\/\/youtu\.be\/(.{11})\??(.*)\)/
+    Regex.replace(video_regex, body, &video_replace_func/5)
+  end
+
+  def video_replace_func(_, key1,ext1,key2,ext2) do
+    url_end = key1 <> key2 <> cond do
+                                ext1 != "" -> "?#{ext1}"
+                                ext2 != "" -> "?#{ext2}"
+                              end
+    url_end = Regex.replace(~r{t=([0-9]+)s}, url_end, "start=\\1")
+    ~s(<iframe width="560" height="315" src="https://www.youtube.com/embed/#{url_end}" frameborder="0" allowfullscreen="true"></iframe>)
   end
 
   defp fix_ampersands(body) do
