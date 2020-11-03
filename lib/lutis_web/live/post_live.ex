@@ -96,7 +96,7 @@ defmodule LutisWeb.PostLive do
                                 true -> ""
                               end
     url_end = Regex.replace(~r{t=([0-9]+)s}, url_end, "start=\\1")
-    ~s(<iframe width="560" height="315" src="https://www.youtube.com/embed/#{url_end}" frameborder="0" allowfullscreen="true"></iframe>)
+    ~s(<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/#{url_end}" frameborder="0" allowfullscreen="true"></iframe></div>)
   end
 
   defp fix_ampersands(body) do
