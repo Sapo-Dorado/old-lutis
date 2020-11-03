@@ -102,8 +102,10 @@ defmodule Lutis.Messaging do
 
   def has_unread_message?(thread, user) do
     cond do
-      thread.user1 == user -> thread.user1read < thread.lastmessage
-      thread.user2 == user -> thread.user2read < thread.lastmessage
+      thread.user1 == user ->
+        NaiveDateTime.compare(thread.user1read,thread.lastmessage) == :lt
+      thread.user2 == user ->
+        NaiveDateTime.compare(thread.user2read,thread.lastmessage) == :lt
     end
   end
 
