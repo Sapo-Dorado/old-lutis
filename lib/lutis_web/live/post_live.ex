@@ -93,6 +93,7 @@ defmodule LutisWeb.PostLive do
     url_end = key1 <> key2 <> cond do
                                 ext1 != "" -> "?#{ext1}"
                                 ext2 != "" -> "?#{ext2}"
+                                true -> ""
                               end
     url_end = Regex.replace(~r{t=([0-9]+)s}, url_end, "start=\\1")
     ~s(<iframe width="560" height="315" src="https://www.youtube.com/embed/#{url_end}" frameborder="0" allowfullscreen="true"></iframe>)
