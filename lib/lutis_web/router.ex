@@ -36,6 +36,8 @@ defmodule LutisWeb.Router do
     pipe_through :browser
     resources "/sessions", SessionController, only: [:create, :delete],
                                               singleton: true
+    live "/posts", PostIndexLive
+    get "/posts/:user/:id", PostController, :show
   end
 
   #When user shouldn't be logged in
@@ -67,8 +69,6 @@ defmodule LutisWeb.Router do
     post "/messages/:recipient", ThreadController, :send
 
     resources "/posts", PostController, only: [:new, :create]
-    live "/posts", PostIndexLive
-    get "/posts/:user/:id", PostController, :show
     get "/posts/:user/:id/edit", PostController, :edit
     patch "/posts/:user/:id", PostController, :update
     put "/posts/:user/:id", PostController, :update

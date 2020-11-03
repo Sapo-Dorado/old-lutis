@@ -15,10 +15,7 @@
     <%= markdown(@post.contents)%>
     <br>
     <%= post_info(assigns) %>
-    <%= f = form_for :comment, "#", [phx_submit: "comment"]%>
-      <%= textarea(f, :contents) %>
-      <%= submit "Comment", class: "btn btn-a btn-sm" %>
-    </form>
+    <%= comment_area(assigns) %>
   </div>
   <div id="comment-list" phx-hook="InfiniteScroll">
 

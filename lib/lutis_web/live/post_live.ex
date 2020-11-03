@@ -6,11 +6,6 @@ defmodule LutisWeb.PostLive do
   @load_amount 10
 
   def mount(_params, session, socket) do
-    socket =
-      case session["user_id"] do
-        nil -> redirect(socket, to: Routes.login_path(socket, :index))
-        _ -> socket
-      end
     post = Posts.get_post_by_url_id(session["post_id"])
     socket = case Posts.get_batch(Posts.comment_stream(post), @load_amount) do
               {:ok, comments, comment_stream} ->
@@ -18,29 +13,39 @@ defmodule LutisWeb.PostLive do
               _error ->
                 socket |> assign(:comments, []) |> assign(:comment_stream, nil)
             end
+    user_id = session["user_id"]
     {:ok, socket
           |> assign(:session, session)
-          |> assign(:upvoted?, Posts.has_upvoted?(session["user_id"], post))
+          |> assign(:user_id, user_id)
+          |> assign(:upvoted?, Posts.has_upvoted?(user_id, post))
           |> assign(:upvotes, Posts.count_upvotes(post))
           |> assign(:post, post)}
   end
 
   def handle_event("upvote", _params, socket) do
     post = socket.assigns.post
-    session = socket.assigns.session
-    Posts.create_upvote(post, session["user_id"])
-    {:noreply, socket
-               |> assign(:upvoted?, Posts.has_upvoted?(session["user_id"], post))
-               |> assign(:upvotes, Posts.count_upvotes(post))}
+    user_id = socket.assigns.user_id
+    if(!is_nil(user_id)) do
+      Posts.create_upvote(post, user_id)
+      {:noreply, socket
+                 |> assign(:upvoted?, Posts.has_upvoted?(user_id, post))
+                 |> assign(:upvotes, Posts.count_upvotes(post))}
+    else
+      {:noreply, socket}
+    end
   end
 
   def handle_event("comment", %{"comment" => %{"contents" => contents}}, socket) do
     post = socket.assigns.post
-    session = socket.assigns.session
-    case Posts.create_comment(contents, session["user_id"], post) do
-      {:ok, comment} ->
-        {:noreply, socket |> assign(:comments, [comment] ++ socket.assigns.comments)}
-      _error ->
+    user_id = socket.assigns.user_id
+    if(!is_nil(user_id)) do
+      case Posts.create_comment(contents, user_id, post) do
+        {:ok, comment} ->
+          {:noreply, socket |> assign(:comments, [comment] ++ socket.assigns.comments)}
+        _error ->
+          {:noreply, socket}
+      end
+    else
         {:noreply, socket}
     end
   end
@@ -91,10 +96,24 @@ defmodule LutisWeb.PostLive do
     <p>Topic: <%= @post.topic%></p>
     <%= _ = form_for :upvote, "#", [phx_submit: "upvote"]%>
       <p class="post-info-text"> <%= view_icon() %>&nbsp;<%= @post.views %>
-      <%=live_component @socket, LutisWeb.UpvoteComponent,
-                                 upvoted?: @upvoted?%>
+      <%= if !is_nil(@user_id) do %>
+        <%=live_component @socket, LutisWeb.UpvoteComponent,
+                                   upvoted?: @upvoted?%>
+      <% else %>
+        <%= upvote_icon() %>
+      <% end %>
       <%= @upvotes %>
     </form>
+    """
+  end
+  def comment_area(assigns) do
+    ~L"""
+    <%= if !is_nil(@user_id) do %>
+      <%= f = form_for :comment, "#", [phx_submit: "comment"]%>
+        <%= textarea(f, :contents) %>
+        <%= submit "Comment", class: "btn btn-a btn-sm" %>
+      </form>
+    <% end %>
     """
   end
 
@@ -117,5 +136,8 @@ defmodule LutisWeb.PostLive do
     raw(~s(<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>))
   end
 
+  def upvote_icon() do
+    raw(~s(<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-up"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>))
+  end
 
 end

@@ -19,6 +19,7 @@ defmodule LutisWeb.MessagingLive do
       case Messaging.get_batch(Messaging.message_stream(thread), @load_amount) do
         {:ok, message_list, message_stream} -> 
           {:ok, socket
+                |> assign(:session, session)
                 |> assign(:messages, message_list)
                 |> assign(:recipient, recipient)
                 |> assign(:user_id, session["user_id"])

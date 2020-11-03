@@ -6,11 +6,6 @@ defmodule LutisWeb.PostIndexLive do
   @load_amount 5
 
   def mount(assigns, session, socket) do
-    socket =
-      case session["user_id"] do
-        nil -> redirect(socket, to: Routes.login_path(socket, :index))
-        _ -> socket
-      end
     socket = case assigns do
       %{"search" => %{"query" => query, "order" => order}} ->
         socket
@@ -24,6 +19,7 @@ defmodule LutisWeb.PostIndexLive do
     case Posts.get_batch(Posts.post_stream(assigns), @load_amount) do
       {:ok, posts, post_stream} ->
         {:ok, socket
+              |> assign(:session, session)
               |> assign(:posts, posts)
               |> assign(:post_stream, post_stream)}
       {:error, _} -> {:ok, socket |> redirect(to: Routes.home_page_path(socket, :index))}

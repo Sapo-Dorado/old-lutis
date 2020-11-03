@@ -10,6 +10,7 @@ defmodule LutisWeb.MessagingIndexLive do
         threads = Messaging.list_threads(session["user_id"])
         LutisWeb.Endpoint.subscribe("thread_#{session["user_id"]}")
         {:ok, socket
+              |> assign(:session, session)
               |> assign(:user_id, session["user_id"])
               |> assign(:threads, threads)}
     end

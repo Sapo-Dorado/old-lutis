@@ -94,7 +94,11 @@ defmodule Lutis.Posts do
   end
 
   def has_upvoted?(user_id, post) do
-    (from(u in Upvote, where: u.post_id == ^post.id, where: u.user == ^user_id) |> Repo.one()) != nil
+    if(is_nil(user_id)) do
+      false
+    else
+      (from(u in Upvote, where: u.post_id == ^post.id, where: u.user == ^user_id) |> Repo.one()) != nil
+    end
   end
 
   def create_upvote(post, user_id) do
